@@ -1,0 +1,29 @@
+name: smarthire
+services:
+  db:
+    image: postgres
+    env_file: .env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  
+  backend:
+    build: ./backend
+    env_file: .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    
+  frontend:
+    build: ./frontend
+    env_file: .env
+    ports:
+      - "4173:4173"
+    depends_on:
+      - db
+      - backend
+
+volumes:
+  db-data:
