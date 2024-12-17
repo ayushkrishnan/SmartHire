@@ -1,0 +1,46 @@
+import {
+    integer,
+    pgTable,
+    serial,
+    text
+} from "drizzle-orm/pg-core"
+
+export const users = pgTable("users", {
+    id: serial().primaryKey(),
+    email: text().notNull(),
+    password: text().notNull(),
+    name: text().notNull(),
+    type: text().notNull().default("applicant"),
+    contact: text()
+});
+
+export const jobs = pgTable("jobs", {
+    id: serial().primaryKey(),
+    title: text().notNull(),
+    experience: text().default("Entry level"),
+    department: text().notNull(),
+    userId: integer().references(() => users.id, {
+        onDelete: "cascade"
+    }).notNull()
+});
+
+export const skills = pgTable("skills", {
+    id: serial().primaryKey(),
+    name: text().notNull(),
+    jobId: integer().references(() => jobs.id, {
+        onDelete: "cascade"
+    }).notNull()
+});
+
+export const applications = pgTable("applications", {
+    id: serial().primaryKey(),
+    userId: integer().references(() => users.id, {
+        onDelete: "cascade"
+    }),
+    jobId: integer().references(() => jobs.id, {
+        onDelete: "cascade"
+    }),
+    resume: text().notNull(),
+    score: integer().notNull().default(0),
+    suggestions: text()
+})

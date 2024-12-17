@@ -11,6 +11,8 @@
         "restart": "echo 'TypeScript recompiling and server restarting...'"
     },
     "env": {
-        
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "password",
+        "POSTGRES_DB": "smarthire"
     }
 }
