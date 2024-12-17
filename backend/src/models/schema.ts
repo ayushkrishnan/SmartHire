@@ -2,7 +2,9 @@ import {
     integer,
     pgTable,
     serial,
-    text
+    text,
+    timestamp,
+    uuid
 } from "drizzle-orm/pg-core"
 
 export const users = pgTable("users", {
@@ -13,6 +15,14 @@ export const users = pgTable("users", {
     type: text().notNull().default("applicant"),
     contact: text()
 });
+
+export const sessions = pgTable("sessions", {
+    id: uuid().defaultRandom().primaryKey(),
+    userId: integer().references(() => users.id, {
+        onDelete: "cascade"
+    }).notNull(),
+    createdAt: timestamp().defaultNow()
+})
 
 export const jobs = pgTable("jobs", {
     id: serial().primaryKey(),
