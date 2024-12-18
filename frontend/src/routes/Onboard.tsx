@@ -5,14 +5,38 @@ import { Button } from "@/components/ui/button"
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
 import { useState } from "react"
+import { useNavigate } from "react-router"
 
 export default function Onboard() {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        // TODO: Implement form submission logic
-        console.log('Form submitted')
+        const formData = new FormData(event.target as HTMLFormElement);
+
+        const username = formData.get("username");
+        const email = formData.get("email");
+        const password = formData.get("password");
+
+        //Potential vulnerability, ignoring because of time
+        //FIXME: avoid sending user type like this.
+        const response = await fetch("http://localhost:8080/user/signup", {
+            method: "POST",
+            body: JSON.stringify({
+                name: username,
+                email,
+                password,
+                type: "admin"
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+        if(response.ok){
+            navigate("/login");
+        }
     }
 
     return (
@@ -26,17 +50,18 @@ export default function Onboard() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="username">Username</Label>
-                            <Input id="username" placeholder="Enter your username" required />
+                            <Input name="username" id="username" placeholder="Enter your username" required />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" placeholder="Enter your email" required />
+                            <Input name="email" id="email" type="email" placeholder="Enter your email" required />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="password">Password</Label>
                             <div className="relative">
                                 <Input
                                     id="password"
+                                    name="password"
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Enter your password"
                                     required
@@ -45,7 +70,7 @@ export default function Onboard() {
                                     type="button"
                                     variant="ghost"
                                     size="icon"
-                                    className="absolute right-2 top-1/2 -translate-y-1/2"
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 hover:bg-transparent"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}

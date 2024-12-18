@@ -22,7 +22,12 @@ export async function login(email: string, password: string){
 }
 
 export async function addUser(user: InferInsertModel<typeof users>){
-    await db.insert(users).values(user);
+    await db.insert(users).values({
+        name: user.name,
+        email: user.email,
+        password: hash(user.password),
+        type: user.type
+    });
 }
 
 export async function getUser(userId: number){

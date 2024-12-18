@@ -19,6 +19,10 @@ export async function getSessionUser(sessionId: string){
     return await getUser(sessionList.at(0)?.userId!);
 }
 
+export async function getSessions(){
+    return await db.select().from(sessions);
+}
+
 export class SessionNotFoundError extends Error{
     constructor(){
         super("Session not found");
