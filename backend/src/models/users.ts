@@ -26,7 +26,8 @@ export async function addUser(user: InferInsertModel<typeof users>){
         name: user.name,
         email: user.email,
         password: hash(user.password),
-        type: user.type
+        type: user.type,
+        contact: user.contact
     });
 }
 

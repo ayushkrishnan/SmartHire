@@ -1,5 +1,5 @@
-import { Outlet } from "react-router";
-import { User, Plus, LayoutDashboard } from 'lucide-react';
+import { Outlet, useNavigate } from "react-router";
+import { User, Plus } from 'lucide-react';
 import {
     Sidebar,
     SidebarContent,
@@ -11,8 +11,41 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
+
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function AdminLayout() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        (async () => {
+            const response = await fetch("http://localhost:8080/user/verify", {
+                method: "POST",
+                body: JSON.stringify({
+                    type: "admin"
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include"
+            })
+
+            if(!response.ok){
+                navigate("/login");
+            }
+        })();
+    }, [])
+
+    const handleLogout = async () => {
+        await fetch("http://localhost:8080/user/logout", {
+            credentials: "include"
+        });
+
+        navigate("/login");
+    }
+
     return (
         <SidebarProvider>
             <main className="flex h-screen overflow-hidden w-full">
@@ -38,7 +71,7 @@ export default function AdminLayout() {
                         </SidebarMenu>
                     </SidebarContent>
                     <SidebarFooter>
-                        {/* Add footer content if needed */}
+                        <Button onClick={handleLogout}>Logout</Button>
                     </SidebarFooter>
                 </Sidebar>
                 <div className="flex flex-col flex-1 overflow-hidden w-full">
@@ -50,6 +83,7 @@ export default function AdminLayout() {
                         <Outlet />
                     </div>
                 </div>
+                <Toaster/>
             </main>
         </SidebarProvider>
     );

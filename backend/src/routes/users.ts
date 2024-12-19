@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response,  Router } from "express";
 import { addUser, getUsers, login, UserNotFoundError } from "../models/users";
-import { addSession, getSessionUser } from "../models/sessions";
+import { addSession, deleteSession, getSessionUser } from "../models/sessions";
 
 const userRouter = Router();
 
@@ -24,6 +24,22 @@ userRouter.get("/", validateSession({type: "admin"}), async (req, res, next) => 
     const users = await getUsers();
     res.json(users);
 });
+
+
+userRouter.post("/verify", async (req, res, next) => {
+    const type = req.body.type;
+    try {
+        const sessionId = req.cookies.session;
+        const user = await getSessionUser(sessionId);
+        if(user?.type === type){
+            res.sendStatus(200);
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(400);
+        next(error);
+    }
+})
 
 // API route to initiate setup screen when there are no admins
 userRouter.get("/count", async (req, res, next) => {
@@ -52,6 +68,19 @@ userRouter.post("/login", async (req, res, next) => {
     }
 })
 
+userRouter.get("/logout", async (req, res, next) => {
+    try {
+        const sessionId = req.cookies.session;
+
+        await deleteSession(sessionId);
+        res.sendStatus(200);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+        next(error);
+    }
+})
+
 userRouter.post("/signup", async (req, res, next) => {
     try{
         await addUser(req.body);
@@ -64,7 +93,14 @@ userRouter.post("/signup", async (req, res, next) => {
 })
 
 userRouter.post("/add", validateSession({type: "admin"}), async (req, res, next) => {
-    
+    try{
+        await addUser(req.body);
+        res.sendStatus(200);
+    }catch(error){
+        res.sendStatus(500);
+        console.error(error);
+        next(error);
+    }
 })
 
 export default userRouter;

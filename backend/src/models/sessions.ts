@@ -23,6 +23,10 @@ export async function getSessions(){
     return await db.select().from(sessions);
 }
 
+export async function deleteSession(sessionId: string){
+    await db.delete(sessions).where(eq(sessions.id, sessionId));
+}
+
 export class SessionNotFoundError extends Error{
     constructor(){
         super("Session not found");
