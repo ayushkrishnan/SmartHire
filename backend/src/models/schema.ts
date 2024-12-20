@@ -27,6 +27,7 @@ export const sessions = pgTable("sessions", {
 export const jobs = pgTable("jobs", {
     id: serial().primaryKey(),
     title: text().notNull(),
+    description: text().notNull(),
     experience: text().default("Entry level"),
     department: text().notNull(),
     userId: integer().references(() => users.id, {

@@ -1,26 +1,11 @@
-import { NextFunction, Request, Response,  Router } from "express";
+import { Router } from "express";
+import { validateSession } from "./middleware";
 import { addUser, getUsers, login, UserNotFoundError } from "../models/users";
 import { addSession, deleteSession, getSessionUser } from "../models/sessions";
 
 const userRouter = Router();
 
-function validateSession({type}: {type: string}){
-    return async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const sessionId = req.cookies.session;
-            const user = await getSessionUser(sessionId);
-            if(user?.type === type){
-                next();
-            }
-        } catch (error) {
-            console.error(error);
-            res.sendStatus(400);
-            next(error);
-        }
-    }
-}
-
-userRouter.get("/", validateSession({type: "admin"}), async (req, res, next) => {
+userRouter.get("/", validateSession({type: ["admin"]}), async (req, res, next) => {
     const users = await getUsers();
     res.json(users);
 });
@@ -92,7 +77,7 @@ userRouter.post("/signup", async (req, res, next) => {
     }
 })
 
-userRouter.post("/add", validateSession({type: "admin"}), async (req, res, next) => {
+userRouter.post("/add", validateSession({type: ["admin"]}), async (req, res, next) => {
     try{
         await addUser(req.body);
         res.sendStatus(200);

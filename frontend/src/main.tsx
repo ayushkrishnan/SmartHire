@@ -9,6 +9,8 @@ import Onboard from './routes/Onboard'
 import AdminLayout from './routes/admin/AdminLayout'
 import AdminUsersPage from './routes/admin/AdminUsers'
 import AdminNewUser from './routes/admin/AdminNewUser'
+import DashboardLayout from './routes/dashboard/DashboardLayout'
+import DashboardJobs from './routes/dashboard/DashboardJobs'
 
 createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
@@ -20,6 +22,9 @@ createRoot(document.getElementById('root')!).render(
             <Route path='/admin' element={<AdminLayout/>}>
                 <Route index element={<AdminUsersPage/>}/>
                 <Route path="users/new" element={<AdminNewUser/>}/>
+            </Route>
+            <Route path='/dashboard' element={<DashboardLayout/>}>
+                <Route index element={<DashboardJobs/>}/>
             </Route>
         </Routes>
     </BrowserRouter>
