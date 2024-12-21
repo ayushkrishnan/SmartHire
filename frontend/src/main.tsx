@@ -11,6 +11,7 @@ import AdminUsersPage from './routes/admin/AdminUsers'
 import AdminNewUser from './routes/admin/AdminNewUser'
 import DashboardLayout from './routes/dashboard/DashboardLayout'
 import DashboardJobs from './routes/dashboard/DashboardJobs'
+import DashboardJobStatus from './routes/dashboard/DashboardJobStatus'
 
 createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
             </Route>
             <Route path='/dashboard' element={<DashboardLayout/>}>
                 <Route index element={<DashboardJobs/>}/>
+                <Route path="job/:id" element={<DashboardJobStatus/>}/>
             </Route>
         </Routes>
     </BrowserRouter>

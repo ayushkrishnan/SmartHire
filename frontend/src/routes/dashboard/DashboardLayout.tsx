@@ -67,12 +67,12 @@ export default function DashboardLayout(){
                         <Button onClick={handleLogout}>Logout</Button>
                     </SidebarFooter>
                 </Sidebar>
-                <div className="lex flex-col flex-1 overflow-hidden w-full">
+                <div className="flex flex-col overflow-hidden w-full h-full">
                     <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-muted/40 px-6">
                         <SidebarTrigger />
                         <h2 className="text-lg font-semibold">HR Dashboard</h2>
                     </header>
-                    <div className="flex-1 overflow-auto p-6">
+                    <div className="overflow-auto p-4 h-full">
                         <Outlet />
                     </div>
                 </div>

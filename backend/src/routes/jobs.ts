@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateSession } from "./middleware";
-import { addJob, getJobs } from "../models/jobs";
+import { addJob, getJobs, getJob, deleteJob } from "../models/jobs";
 
 const jobRouter = Router();
 
@@ -22,6 +22,29 @@ jobRouter.get("/", async (req, res, next) => {
         next(error);
     }
 })
+
+jobRouter.get("/:id", async (req, res, next) => {
+    try {
+        const job = await getJob(Number(req.params.id));
+
+        res.json(job);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+        next(error);
+    }
+})
+
+jobRouter.delete("/:id", async (req, res, next) => {
+    try {
+        await deleteJob(Number(req.params.id));
+        res.sendStatus(200);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+        next(error);
+    }
+});
 
 jobRouter.post("/", async (req, res, next) => {
     const {skills, title, description, department, experience} = req.body;

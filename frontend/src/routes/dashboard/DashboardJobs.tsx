@@ -71,6 +71,22 @@ export default function DashboardJobs() {
         event.currentTarget.reset()
     }
 
+    const handleDelete = async (id: number) => {
+        await fetch(`http://localhost:8080/job/${id}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        const response = await fetch("http://localhost:8080/job", {
+            credentials: "include"
+        });
+
+        if (response.ok) {
+            const apiJobs = await response.json();
+            setJobs(apiJobs);
+        }
+    }
+
     return (
         <div className="flex flex-col gap-2 w-full h-full">
             <div className="flex justify-between items-center mb-4">
@@ -93,7 +109,7 @@ export default function DashboardJobs() {
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="description">Description</Label>
-                                <Textarea id="description" name="description" placeholder="Job description" required />
+                                <Textarea id="description" name="description" placeholder="Job description" rows={10} required />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="experience">Experience</Label>
@@ -121,9 +137,9 @@ export default function DashboardJobs() {
                     </DialogContent>
                 </Dialog>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-row flex-wrap gap-4 h-full">
                 {jobs.map((job) => (
-                    <JobCard key={job.id} {...job} />
+                    <JobCard key={job.id} {...job} onDelete={handleDelete}/>
                 ))}
             </div>
         </div>

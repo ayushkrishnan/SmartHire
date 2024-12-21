@@ -1,23 +1,38 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Button } from "../ui/button"
+import { Trash } from "lucide-react"
+import { Link } from "react-router"
 
 interface JobCardProps {
+    id: number,
     title: string
     description: string
     experience: string
-    department: string
+    department: string,
+    skills: string[],
+    onDelete: (id: number) => void
 }
 
-export function JobCard({ title, description, experience, department }: JobCardProps) {
+export function JobCard({ id, title, description, experience, department, onDelete }: JobCardProps) {
+
     return (
-        <Card className="w-[350px] m-2">
+        <Card className="w-[350px] m-2 flex flex-col h-fit">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>{department}</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col">
                 <p className="text-sm text-muted-foreground mb-2">{description}</p>
-                <p className="text-sm font-semibold">Experience: {experience}</p>
+                <p className="text-sm font-semibold mt-auto">Experience: {experience}</p>
             </CardContent>
+            <CardFooter className="flex flex-row gap-2">
+                <Link to={`/dashboard/job/${id}`}>
+                    <Button>View Job</Button>
+                </Link>
+                <Button variant="outline" onClick={() => onDelete(id)}>
+                    <Trash/>
+                </Button>
+            </CardFooter>
         </Card>
     )
 }
