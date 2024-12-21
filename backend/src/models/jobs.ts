@@ -10,8 +10,8 @@ export async function addJob(job: InferInsertModel<typeof jobs>, skillList: stri
     }))).returning();
 }
 
-export async function getJobs(userId: number) {
-    const dbJobs: (InferSelectModel<typeof jobs> & {skills?: InferSelectModel<typeof skills>[]})[] = await db.select().from(jobs).where(eq(jobs.userId, userId));
+export async function getJobs() {
+    const dbJobs: (InferSelectModel<typeof jobs> & {skills?: InferSelectModel<typeof skills>[]})[] = await db.select().from(jobs);
 
     for(const job of dbJobs){
         const dbSkills = await db.select().from(skills).where(eq(skills.jobId, job.id));

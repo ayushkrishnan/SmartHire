@@ -7,14 +7,8 @@ const jobRouter = Router();
 jobRouter.use(validateSession({type: ["hr", "admin", "applicant"]}));
 
 jobRouter.get("/", async (req, res, next) => {
-    const userId = req.userId;
-
-    if(!userId){
-        res.sendStatus(403);
-    }
-
     try {
-        const jobs = await getJobs(userId!);
+        const jobs = await getJobs();
         res.json(jobs);
     } catch (error) {
         console.error(error);
