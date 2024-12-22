@@ -6,8 +6,16 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import { Search } from 'lucide-react'
+import { 
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 
 interface Job {
     id: number
@@ -23,6 +31,7 @@ export default function JobListings() {
     const navigate = useNavigate();
     const [jobs, setJobs] = useState<Job[]>([])
     const [searchTerm, setSearchTerm] = useState("")
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
     useEffect(() => {
         (async () => {
@@ -45,6 +54,40 @@ export default function JobListings() {
         navigate("/login");
     }
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            if (file.type === "application/pdf") {
+                setSelectedFile(file);
+            } else {
+                e.target.value = '';
+            }
+        }
+    }
+
+    const handleSubmit = (jobId: number, e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const reader = new FileReader();
+        reader.readAsDataURL(selectedFile!);
+
+        reader.onload = async (ev) => {
+            await fetch("http://localhost:8080/application", {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({
+                    resume: reader.result?.toString().replace("data:application/pdf;base64,", ""),
+                    jobId
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            
+        }
+
+    }
+
     return (
         <div className="container mx-auto py-8 px-4">
             <div className="flex justify-between items-center mb-6">
@@ -60,6 +103,7 @@ export default function JobListings() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
+                    <Button variant="outline">View Applications</Button>
                     <Button onClick={handleLogout}>Log Out</Button>
                 </div>
             </div>
@@ -87,7 +131,37 @@ export default function JobListings() {
                                 <p className="text-sm font-medium">Department: {job.department}</p>
                             </CardContent>
                             <CardFooter>
-                                <Button className="w-full">Apply Now</Button>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button className="w-full">Apply Now</Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Apply for {job.title}</DialogTitle>
+                                            <DialogDescription>
+                                                Upload your resume to apply for this position
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <form onSubmit={(e) => handleSubmit(job.id, e)} className="space-y-4">
+                                            <div className="grid w-full max-w-sm items-center gap-1.5">
+                                                <label htmlFor="resume">Resume</label>
+                                                <Input
+                                                    id="resume"
+                                                    type="file"
+                                                    accept=".pdf"
+                                                    onChange={handleFileChange}
+                                                    className="cursor-pointer"
+                                                />
+                                                <p className="text-sm text-muted-foreground">
+                                                    Please upload your resume in PDF format
+                                                </p>
+                                            </div>
+                                            <Button type="submit" className="w-fit">
+                                                Submit Application
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
                             </CardFooter>
                         </Card>
                     ))}

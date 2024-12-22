@@ -1,4 +1,5 @@
 import {
+    boolean,
     integer,
     pgTable,
     serial,
@@ -53,5 +54,15 @@ export const applications = pgTable("applications", {
     }),
     resume: text().notNull(),
     score: integer().notNull().default(0),
-    suggestions: text()
+    suggestions: text(),
+    status: text().default("pending")
 })
+
+export const messages = pgTable("messages", {
+    id: serial().primaryKey(),
+    applicationId: integer().references(() => applications.id, {
+        onDelete: "cascade"
+    }),
+    content: text().notNull(),
+    role: text().default("user").notNull()
+});
