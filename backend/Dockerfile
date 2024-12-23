@@ -3,7 +3,7 @@ FROM node:latest
 WORKDIR /app
 COPY . .
 
-RUN npm install && npm run build
+RUN npm install && npm run build && chmod +x entrypoint.sh
 
-ENTRYPOINT ["node", "dist/server.js"]
+ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 8080

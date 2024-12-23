@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateSession } from "./middleware";
-import { getApplications, getApplication, addApplication } from "../models/applications";
+import { getApplications, getApplication, addApplication, getJobApplications } from "../models/applications";
 import {writeFile} from "node:fs/promises"
 import { gradeResume } from "../agent";
 import { getJob } from "../models/jobs";
@@ -17,7 +17,19 @@ applicationRouter.get("/", async (req, res, next) => {
     const user = req.userId;
 
     try {
-        const applications = getApplications(user!)
+        const applications = await getApplications(user!)
+        res.json(applications);
+    } catch (error) {
+        console.error(error)
+        res.send(500)
+        next(error)
+    }
+})
+
+applicationRouter.get("/job/:id", async (req, res, next) => {
+
+    try {
+        const applications = await getJobApplications(Number(req.params.id))
         res.json(applications);
     } catch (error) {
         console.error(error)
@@ -49,13 +61,13 @@ applicationRouter.post("/", async (req, res, next) => {
         const analysis = await gradeResume(pdfData.text, job.title, job.description, job.experience!)
         console.log(analysis)
 
-        // await addApplication({
-        //     userId,
-        //     jobId,
-        //     resume,
-        //     score: analysis.score,
-        //     suggestions: analysis.suggestions
-        // })
+        await addApplication({
+            userId,
+            jobId,
+            resume,
+            score: analysis.score,
+            suggestions: analysis.suggestions
+        })
 
         res.sendStatus(200);
     } catch (error) {

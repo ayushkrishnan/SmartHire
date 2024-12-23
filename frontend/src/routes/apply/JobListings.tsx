@@ -6,16 +6,20 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import { Search } from 'lucide-react'
-import { 
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 import { Link, useNavigate } from "react-router"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface Job {
     id: number
@@ -27,9 +31,17 @@ interface Job {
     skills: string[]
 }
 
+interface Application {
+    id: number,
+    jobId: number,
+    resume: string,
+    suggestions: string
+}
+
 export default function JobListings() {
     const navigate = useNavigate();
     const [jobs, setJobs] = useState<Job[]>([])
+    const [applications, setApplications] = useState<Application[]>([])
     const [searchTerm, setSearchTerm] = useState("")
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
@@ -39,9 +51,18 @@ export default function JobListings() {
                 credentials: "include"
             });
 
+            const applicationResponse = await fetch("http://localhost:8080/application", {
+                credentials: "include"
+            })
+
             if (response.ok) {
                 const apiJobs = await response.json();
                 setJobs(apiJobs);
+            }
+
+            if (applicationResponse.ok) {
+                const apiApplications = await applicationResponse.json();
+                setApplications(apiApplications);
             }
         })()
     }, [])
@@ -71,7 +92,7 @@ export default function JobListings() {
         const reader = new FileReader();
         reader.readAsDataURL(selectedFile!);
 
-        reader.onload = async (ev) => {
+        reader.onload = async () => {
             await fetch("http://localhost:8080/application", {
                 method: "POST",
                 credentials: "include",
@@ -83,7 +104,15 @@ export default function JobListings() {
                     "Content-Type": "application/json"
                 }
             })
-            
+
+            const applicationResponse = await fetch("http://localhost:8080/application", {
+                credentials: "include"
+            })
+
+            if (applicationResponse.ok) {
+                const apiApplications = await applicationResponse.json();
+                setApplications(apiApplications);
+            }
         }
 
     }
@@ -103,7 +132,6 @@ export default function JobListings() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <Button variant="outline">View Applications</Button>
                     <Button onClick={handleLogout}>Log Out</Button>
                 </div>
             </div>
@@ -125,43 +153,62 @@ export default function JobListings() {
                                     <Badge variant="secondary">{job.experience}</Badge>
                                 </div>
                             </CardHeader>
-                            <CardContent className="flex-grow">
+                            <CardContent className="flex flex-col flex-grow">
                                 <p className="text-sm text-muted-foreground mb-4">{job.description}</p>
-                                <Separator className="my-4" />
+                                <Separator className="my-4 mt-auto"/>
                                 <p className="text-sm font-medium">Department: {job.department}</p>
                             </CardContent>
                             <CardFooter>
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button className="w-full">Apply Now</Button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>Apply for {job.title}</DialogTitle>
-                                            <DialogDescription>
-                                                Upload your resume to apply for this position
-                                            </DialogDescription>
-                                        </DialogHeader>
-                                        <form onSubmit={(e) => handleSubmit(job.id, e)} className="space-y-4">
-                                            <div className="grid w-full max-w-sm items-center gap-1.5">
-                                                <label htmlFor="resume">Resume</label>
-                                                <Input
-                                                    id="resume"
-                                                    type="file"
-                                                    accept=".pdf"
-                                                    onChange={handleFileChange}
-                                                    className="cursor-pointer"
-                                                />
-                                                <p className="text-sm text-muted-foreground">
-                                                    Please upload your resume in PDF format
-                                                </p>
-                                            </div>
-                                            <Button type="submit" className="w-fit">
-                                                Submit Application
-                                            </Button>
-                                        </form>
-                                    </DialogContent>
-                                </Dialog>
+                                {
+                                    !applications.find(application => application.jobId === job.id) ?
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button className="w-full">Apply Now</Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Apply for {job.title}</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Upload your resume to apply for this position
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <form onSubmit={(e) => handleSubmit(job.id, e)} className="space-y-4">
+                                                    <div className="grid w-full max-w-sm items-center gap-1.5">
+                                                        <label htmlFor="resume">Resume</label>
+                                                        <Input
+                                                            id="resume"
+                                                            type="file"
+                                                            accept=".pdf"
+                                                            onChange={handleFileChange}
+                                                            className="cursor-pointer"
+                                                        />
+                                                        <p className="text-sm text-muted-foreground">
+                                                            Please upload your resume in PDF format
+                                                        </p>
+                                                    </div>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction type="submit">
+                                                            Submit Application
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </form>
+                                            </AlertDialogContent>
+                                        </AlertDialog> : 
+                                        <div className="flex flex-row gap-2">
+                                            <Link to={`data:application/pdf;base64,${applications.find(application => application.jobId === job.id)?.resume}`} target="_blank">
+                                                <Button variant={"outline"}>View Application</Button>
+                                            </Link>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Button variant={"outline"}>Feedback</Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent>
+                                                    <p>{applications.find(application => application.jobId === job.id)?.suggestions}</p>
+                                                </PopoverContent>
+                                            </Popover>
+                                        </div>
+                                }
                             </CardFooter>
                         </Card>
                     ))}

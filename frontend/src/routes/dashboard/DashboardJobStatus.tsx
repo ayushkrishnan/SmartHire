@@ -1,4 +1,4 @@
-import { useParams } from "react-router"
+import { useParams, Link } from "react-router"
 import { useEffect, useState } from "react";
 import { 
     Table, 
@@ -8,6 +8,7 @@ import {
     TableHeader, 
     TableRow
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 interface Job {
     id: number
@@ -21,9 +22,24 @@ interface Job {
     }[]
 }
 
+interface Application {
+    applications: {
+        id: number,
+        jobId: number,
+        resume: string,
+        score: number,
+        suggestions: string
+    },
+    users: {
+        email: string,
+        name: string
+    }
+}
+
 export default function DashboardJobStatus(){
     const params = useParams();
     const [job, setJob] = useState<Job | undefined>();
+    const [applications, setApplications] = useState<Application[]>([]);
 
     useEffect(() => {
         (async () => {
@@ -31,10 +47,19 @@ export default function DashboardJobStatus(){
                 credentials: "include"
             })
 
+            const applicationResponse = await fetch(`http://localhost:8080/application/job/${params.id}`, {
+                credentials: "include"
+            })
+
             if(response.ok){
                 const apiJob = await response.json();
                 console.log(apiJob)
                 setJob(apiJob);
+            }
+
+            if(applicationResponse.ok){
+                const apiApplications = await applicationResponse.json();
+                setApplications(apiApplications);
             }
         })();
     }, []);
@@ -65,7 +90,21 @@ export default function DashboardJobStatus(){
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        
+                        {
+                            applications.map(application => (
+                                <TableRow key={application.applications.id}>
+                                    <TableCell>{application.users.name}</TableCell>
+                                    <TableCell>{application.users.email}</TableCell>
+                                    <TableCell>{application.applications.score}</TableCell>
+                                    <TableCell>{application.applications.suggestions}</TableCell>
+                                    <TableCell>
+                                        <Link to={`data:application/pdf;base64,${application.applications.resume}`} target="_blank">
+                                            <Button variant={"outline"}>View Application</Button>
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        }
                     </TableBody>
                 </Table>
             </div>

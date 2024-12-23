@@ -20,8 +20,6 @@ export async function gradeResume(resume: string, jobTitle:string, jobDescriptio
     ${experience}
     `
 
-    console.log(resume)
-
     const {object} = await generateObject({
         model,
         system,

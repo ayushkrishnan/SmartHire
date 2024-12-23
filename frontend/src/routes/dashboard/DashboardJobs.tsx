@@ -4,7 +4,6 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -44,7 +43,7 @@ export default function DashboardJobs() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        const formData = new FormData(event.currentTarget)
+        const formData = new FormData(event.target as HTMLFormElement)
         const newJob: Partial<Job> = {
             title: formData.get('title') as string,
             description: formData.get('description') as string,
@@ -53,7 +52,7 @@ export default function DashboardJobs() {
             skills: (formData.get("skills") as string).split(",").map(skill => skill.trim())
         }
 
-        const response = await fetch("http://localhost:8080/job", {
+        await fetch("http://localhost:8080/job", {
             method: "POST",
             credentials: "include",
             body: JSON.stringify(newJob),
@@ -62,13 +61,17 @@ export default function DashboardJobs() {
             }
         })
 
+        const response = await fetch("http://localhost:8080/job", {
+            credentials: "include"
+        });
+
         if (response.ok) {
             const apiJobs = await response.json()
             setJobs((prevJobs) => prevJobs.concat(apiJobs))
         }
 
-        setOpen(false)
-        event.currentTarget.reset()
+        setOpen(false);
+        (event.target as HTMLFormElement).reset()
     }
 
     const handleDelete = async (id: number) => {
@@ -138,8 +141,8 @@ export default function DashboardJobs() {
                 </Dialog>
             </div>
             <div className="flex flex-row flex-wrap gap-4 h-full">
-                {jobs.map((job) => (
-                    <JobCard key={job.id} {...job} onDelete={handleDelete}/>
+                {jobs.map((job, index) => (
+                    <JobCard key={index} {...job} onDelete={handleDelete}/>
                 ))}
             </div>
         </div>
