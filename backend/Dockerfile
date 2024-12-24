@@ -5,5 +5,5 @@ COPY . .
 
 RUN npm install && npm run build && chmod +x entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 EXPOSE 8080
