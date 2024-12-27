@@ -31,6 +31,16 @@ export async function addUser(user: InferInsertModel<typeof users>){
     });
 }
 
+export async function editUser(user: InferInsertModel<typeof users>){
+    await db.update(users).set({
+        name: user.name,
+        email: user.email,
+        password: hash(user.password),
+        type: user.type,
+        contact: user.contact
+    }).where(eq(users.id, user.id!));
+}
+
 export async function getUser(userId: number){
     const userList = await db.select({
         id: users.id,

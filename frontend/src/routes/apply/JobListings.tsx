@@ -35,7 +35,8 @@ interface Application {
     id: number,
     jobId: number,
     resume: string,
-    suggestions: string
+    suggestions: string,
+    status: string
 }
 
 export default function JobListings() {
@@ -132,7 +133,6 @@ export default function JobListings() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <Button onClick={handleLogout}>Log Out</Button>
                 </div>
             </div>
             {jobs.filter(job =>
@@ -149,13 +149,19 @@ export default function JobListings() {
                         <Card key={job.id} className="flex flex-col">
                             <CardHeader>
                                 <div className="flex justify-between items-start">
-                                    <CardTitle className="text-xl">{job.title}</CardTitle>
+                                    <div className="flex flex-col gap-2">
+                                        <CardTitle className="text-xl">{job.title}</CardTitle>
+                                        {
+                                            applications.find(application => application.jobId === job.id) &&
+                                            <p>Status: {applications.find(application => application.jobId === job.id)?.status}</p>
+                                        }
+                                    </div>
                                     <Badge variant="secondary">{job.experience}</Badge>
                                 </div>
                             </CardHeader>
                             <CardContent className="flex flex-col flex-grow">
                                 <p className="text-sm text-muted-foreground mb-4">{job.description}</p>
-                                <Separator className="my-4 mt-auto"/>
+                                <Separator className="my-4 mt-auto" />
                                 <p className="text-sm font-medium">Department: {job.department}</p>
                             </CardContent>
                             <CardFooter>
@@ -194,7 +200,7 @@ export default function JobListings() {
                                                     </AlertDialogFooter>
                                                 </form>
                                             </AlertDialogContent>
-                                        </AlertDialog> : 
+                                        </AlertDialog> :
                                         <div className="flex flex-row gap-2">
                                             <Link to={`data:application/pdf;base64,${applications.find(application => application.jobId === job.id)?.resume}`} target="_blank">
                                                 <Button variant={"outline"}>View Application</Button>

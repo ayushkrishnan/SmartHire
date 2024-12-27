@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateSession } from "./middleware";
-import { getApplications, getApplication, addApplication, getJobApplications } from "../models/applications";
+import { getApplications, getApplication, addApplication, getJobApplications, setApplicationStatus } from "../models/applications";
 import {writeFile} from "node:fs/promises"
 import { gradeResume } from "../agent";
 import { getJob } from "../models/jobs";
@@ -42,6 +42,17 @@ applicationRouter.get("/:id", async (req, res, next) => {
     try {
         const application = getApplication(Number(req.params.id))
         res.json(application);
+    } catch (error) {
+        console.error(error)
+        res.send(500)
+        next(error)
+    }
+})
+
+applicationRouter.post("/status/:id", async (req, res, next) => {
+    try {
+        setApplicationStatus(Number(req.params.id), req.body.status);
+        res.sendStatus(200);
     } catch (error) {
         console.error(error)
         res.send(500)

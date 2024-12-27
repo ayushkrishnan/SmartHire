@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateSession } from "./middleware";
-import { addUser, getUsers, login, UserNotFoundError } from "../models/users";
+import { addUser, getUser, getUsers, editUser, login, UserNotFoundError } from "../models/users";
 import { addSession, deleteSession, getSessionUser } from "../models/sessions";
 
 const userRouter = Router();
@@ -10,6 +10,10 @@ userRouter.get("/", validateSession({type: ["admin"]}), async (req, res, next) =
     res.json(users);
 });
 
+userRouter.get("/current", validateSession({type: ["applicant"]}), async (req, res, next) => {
+    const user = await getUser(req.userId!);
+    res.json(user)
+})
 
 userRouter.post("/verify", async (req, res, next) => {
     const type = req.body.type;
@@ -82,6 +86,21 @@ userRouter.post("/add", validateSession({type: ["admin"]}), async (req, res, nex
         await addUser(req.body);
         res.sendStatus(200);
     }catch(error){
+        res.sendStatus(500);
+        console.error(error);
+        next(error);
+    }
+})
+
+userRouter.post("/edit", validateSession({type: ["applicant"]}),async (req, res, next) => {
+    try {
+        await editUser({
+            ...req.body,
+            id: req.userId,
+            type: "applicant"
+        });
+        res.sendStatus(200);
+    } catch (error) {
         res.sendStatus(500);
         console.error(error);
         next(error);

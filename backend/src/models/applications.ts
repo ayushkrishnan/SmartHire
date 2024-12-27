@@ -14,6 +14,16 @@ export async function getJobApplications(jobId: number){
     return await db.select().from(applications).where(eq(applications.jobId, jobId)).innerJoin(users, eq(users.id, applications.userId)).orderBy(desc(applications.score));
 }
 
+export async function getAllApplications(){
+    return await db.select().from(applications);
+}
+
 export async function getApplication(applicationId: number){
     return (await db.select().from(applications).where(eq(applications.id, applicationId))).at(0);
+}
+
+export async function setApplicationStatus(applicationId: number, status: "accepted" | "rejected"){
+    await db.update(applications).set({
+        status
+    }).where(eq(applications.id, applicationId));
 }
