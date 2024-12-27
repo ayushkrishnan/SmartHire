@@ -18,7 +18,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-import { Link, useNavigate } from "react-router"
+import { Link } from "react-router"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface Job {
@@ -40,7 +40,6 @@ interface Application {
 }
 
 export default function JobListings() {
-    const navigate = useNavigate();
     const [jobs, setJobs] = useState<Job[]>([])
     const [applications, setApplications] = useState<Application[]>([])
     const [searchTerm, setSearchTerm] = useState("")
@@ -67,14 +66,6 @@ export default function JobListings() {
             }
         })()
     }, [])
-
-    const handleLogout = async () => {
-        await fetch("http://localhost:8080/user/logout", {
-            credentials: "include"
-        });
-
-        navigate("/login");
-    }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
