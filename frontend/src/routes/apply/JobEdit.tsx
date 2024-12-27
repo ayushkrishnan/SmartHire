@@ -23,7 +23,7 @@ export default function ApplicantEditUser(){
                 setDetails(await response.json())
             }
         })()
-    })
+    }, [])
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
