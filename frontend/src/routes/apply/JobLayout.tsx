@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 
 import {
     Binoculars,
-    FileBarChart2,
+    FileBadgeIcon,
     User
 } from "lucide-react"
 
@@ -68,6 +68,14 @@ export default function ApplicantLayout(){
                                     <Link to="/apply/edit">
                                         <User className="mr-2 h-4 w-4" />
                                         <span>Edit Profile</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link to="http://localhost:3000">
+                                        <FileBadgeIcon className="mr-2 h-4 w-4" />
+                                        <span>Build your resume!</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
