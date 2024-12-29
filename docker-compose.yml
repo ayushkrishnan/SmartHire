@@ -25,7 +25,34 @@ services:
       - "4173:4173"
     depends_on:
       - backend
+  
+  minio:
+    image: minio/minio
+    env_file: .env
+    entrypoint:
+      - minio
+      - server
+      - /data
+      - --console-address
+      - ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+
+  rxresume:
+    image: ghcr.io/amruthpillai/reactive-resume:v4.1.8
+    env_file: .env
+    depends_on:
+      - db
+      - minio
+    ports:
+      - "5174:5173"
+      - "3000:3000"
+      - "6173:6173"
 
 volumes:
   smarthire-data:
   storage-data:
+  minio-data:

@@ -13,6 +13,9 @@ import DashboardLayout from './routes/dashboard/DashboardLayout'
 import DashboardJobs from './routes/dashboard/DashboardJobs'
 import DashboardJobStatus from './routes/dashboard/DashboardJobStatus'
 import JobListings from './routes/apply/JobListings'
+import JobStatisticsDashboard from './routes/dashboard/DashboardReport'
+import ApplicantLayout from './routes/apply/JobLayout'
+import ApplicantEditUser from './routes/apply/JobEdit'
 
 createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
@@ -28,8 +31,12 @@ createRoot(document.getElementById('root')!).render(
             <Route path='/dashboard' element={<DashboardLayout/>}>
                 <Route index element={<DashboardJobs/>}/>
                 <Route path="job/:id" element={<DashboardJobStatus/>}/>
+                <Route path="reports" element={<JobStatisticsDashboard/>}/>
             </Route>
-            <Route path='/apply' element={<JobListings/>}/>
+            <Route path='/apply' element={<ApplicantLayout/>}>
+                <Route index element={<JobListings/>}/>
+                <Route path='edit' element={<ApplicantEditUser/>}/>
+            </Route>
         </Routes>
     </BrowserRouter>
 )

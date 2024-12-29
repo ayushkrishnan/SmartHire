@@ -15,10 +15,11 @@ import { Button } from "@/components/ui/button";
 
 import {
     Binoculars,
-    FileBarChart2
+    FileBadgeIcon,
+    User
 } from "lucide-react"
 
-export default function DashboardLayout(){
+export default function ApplicantLayout(){
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -56,7 +57,7 @@ export default function DashboardLayout(){
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link to="/dashboard">
+                                    <Link to="/apply">
                                         <Binoculars className="mr-2 h-4 w-4" />
                                         <span>Jobs</span>
                                     </Link>
@@ -64,9 +65,17 @@ export default function DashboardLayout(){
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link to="/dashboard/reports">
-                                        <FileBarChart2 className="mr-2 h-4 w-4" />
-                                        <span>Report</span>
+                                    <Link to="/apply/edit">
+                                        <User className="mr-2 h-4 w-4" />
+                                        <span>Edit Profile</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link to="http://localhost:3000">
+                                        <FileBadgeIcon className="mr-2 h-4 w-4" />
+                                        <span>Build your resume!</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -79,7 +88,7 @@ export default function DashboardLayout(){
                 <div className="flex flex-col overflow-hidden w-full h-full">
                     <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-muted/40 px-6">
                         <SidebarTrigger />
-                        <h2 className="text-lg font-semibold">HR Dashboard</h2>
+                        <h2 className="text-lg font-semibold">Applicant Dashboard</h2>
                     </header>
                     <div className="overflow-auto p-4 h-full">
                         <Outlet />

@@ -9,6 +9,7 @@ import {
     TableRow
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Check, X } from "lucide-react";
 
 interface Job {
     id: number
@@ -28,7 +29,8 @@ interface Application {
         jobId: number,
         resume: string,
         score: number,
-        suggestions: string
+        suggestions: string,
+        status: "accepted" | "rejected" | "pending"
     },
     users: {
         email: string,
@@ -64,6 +66,30 @@ export default function DashboardJobStatus(){
         })();
     }, []);
 
+    const setStatus = async (id: number, status: "accepted" | "rejected") => {
+        const response = await fetch(`http://localhost:8080/application/status/${id}`, {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify({
+                status
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+        if(response.ok){
+            const applicationResponse = await fetch(`http://localhost:8080/application/job/${params.id}`, {
+                credentials: "include"
+            })
+
+            if(applicationResponse.ok){
+                const apiApplications = await applicationResponse.json();
+                setApplications(apiApplications);
+            }
+        }
+    }
+
     return (
         <div className="flex flex-col w-full h-full gap-2 text-neutral-600">
             <div className="p-3 flex flex-col gap-2 rounded-md border border-neutral-200">
@@ -87,6 +113,7 @@ export default function DashboardJobStatus(){
                             <TableHead>Score</TableHead>
                             <TableHead>Suggestions</TableHead>
                             <TableHead>Resume</TableHead>
+                            <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -101,6 +128,21 @@ export default function DashboardJobStatus(){
                                         <Link to={`data:application/pdf;base64,${application.applications.resume}`} target="_blank">
                                             <Button variant={"outline"}>View Application</Button>
                                         </Link>
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            application.applications.status === "pending" ?
+                                            <div className="flex flex-row gap-2 items-center">
+                                                <Button variant={"outline"} onClick={() => setStatus(application.applications.id, "accepted")}>
+                                                    <Check/>
+                                                </Button>
+                                                <Button variant={"outline"} onClick={() => setStatus(application.applications.id, "rejected")}>
+                                                    <X/>
+                                                </Button>
+                                            </div>
+                                            :
+                                            <p>{application.applications.status}</p>
+                                        }
                                     </TableCell>
                                 </TableRow>
                             ))

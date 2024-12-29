@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "react-dom": "^19.0.0",
-    "react-router": "^6.28.0"
+    "@react-pdf/renderer": "^4.1.6"
   }
 }
