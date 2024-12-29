@@ -7,6 +7,8 @@ services:
       - smarthire-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - smarthire-network  # Add this
   
   backend:
     build: ./backend
@@ -17,6 +19,10 @@ services:
       - db
     volumes:
       - storage-data:/app/uploads
+    networks:
+      - smarthire-network  # Add this
+    extra_hosts:  # Add this section
+      - "host.docker.internal:host-gateway"
     
   frontend:
     build: ./frontend
@@ -25,6 +31,8 @@ services:
       - "4173:4173"
     depends_on:
       - backend
+    networks:
+      - smarthire-network
   
   minio:
     image: minio/minio
@@ -40,6 +48,8 @@ services:
       - "9001:9001"
     volumes:
       - minio-data:/data
+    networks:
+      - smarthire-network 
 
   rxresume:
     image: ghcr.io/amruthpillai/reactive-resume:v4.1.8
@@ -51,8 +61,16 @@ services:
       - "5174:5173"
       - "3000:3000"
       - "6173:6173"
+    networks:
+      - smarthire-network  # Add this
+    extra_hosts:  # Add this section
+      - "host.docker.internal:host-gateway"
 
 volumes:
   smarthire-data:
   storage-data:
   minio-data:
+
+networks:
+  smarthire-network:
+    driver: bridge
