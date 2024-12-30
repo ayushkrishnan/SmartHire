@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 
-const db = drizzle(`postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@host.docker.internal/smarthire`);
+const db = drizzle('postgresql://postgres.tvxaesoanpetoqbbsdoi:ayush@aws-0-ap-south-1.pooler.supabase.com:6543/postgres');
 
 export default db;

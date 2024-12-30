@@ -23,6 +23,9 @@ services:
       - smarthire-network  # Add this
     extra_hosts:  # Add this section
       - "host.docker.internal:host-gateway"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4 
     
   frontend:
     build: ./frontend
@@ -51,20 +54,20 @@ services:
     networks:
       - smarthire-network 
 
-  rxresume:
-    image: ghcr.io/amruthpillai/reactive-resume:v4.1.8
-    env_file: .env
-    depends_on:
-      - db
-      - minio
-    ports:
-      - "5174:5173"
-      - "3000:3000"
-      - "6173:6173"
-    networks:
-      - smarthire-network  # Add this
-    extra_hosts:  # Add this section
-      - "host.docker.internal:host-gateway"
+  # rxresume:
+  #   image: ghcr.io/amruthpillai/reactive-resume:v4.1.8
+  #   env_file: .env
+  #   depends_on:
+  #     - db
+  #     - minio
+  #   ports:
+  #     - "5174:5173"
+  #     - "3000:3000"
+  #     - "6173:6173"
+  #   networks:
+  #     - smarthire-network  # Add this
+  #   extra_hosts:  # Add this section
+  #     - "host.docker.internal:host-gateway"
 
 volumes:
   smarthire-data:

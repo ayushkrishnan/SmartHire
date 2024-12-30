@@ -13,6 +13,7 @@
     "env": {
         "POSTGRES_USER": "postgres",
         "POSTGRES_PASSWORD": "password",
-        "POSTGRES_DB": "smarthire"
+        "POSTGRES_DB": "smarthire",
+        "GROQ_API_KEY":"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"
     }
 }

@@ -73,7 +73,7 @@ export default function ApplicantLayout(){
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link to="http://localhost:3000">
+                                    <Link to="https://rxresu.me/">
                                         <FileBadgeIcon className="mr-2 h-4 w-4" />
                                         <span>Build your resume!</span>
                                     </Link>
