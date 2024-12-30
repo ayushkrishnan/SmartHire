@@ -8,6 +8,6 @@ export default defineConfig({
     database: "smarthire",
     user: "postgres",
     password: "password",
-    ssl: false
+    ssl: false,
   }
 })
