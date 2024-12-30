@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import { Link } from "react-router"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface Job {
     id: number
@@ -196,14 +195,22 @@ export default function JobListings() {
                                             <Link to={`data:application/pdf;base64,${applications.find(application => application.jobId === job.id)?.resume}`} target="_blank">
                                                 <Button variant={"outline"}>View Application</Button>
                                             </Link>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
                                                     <Button variant={"outline"}>Feedback</Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent>
-                                                    <p>{applications.find(application => application.jobId === job.id)?.suggestions}</p>
-                                                </PopoverContent>
-                                            </Popover>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Application Feedback</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            {applications.find(application => application.jobId === job.id)?.suggestions}
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogAction>Close</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         </div>
                                 }
                             </CardFooter>
