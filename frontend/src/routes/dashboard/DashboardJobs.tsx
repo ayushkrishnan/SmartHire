@@ -67,7 +67,7 @@ export default function DashboardJobs() {
 
         if (response.ok) {
             const apiJobs = await response.json()
-            setJobs((prevJobs) => prevJobs.concat(apiJobs))
+            setJobs(apiJobs)
         }
 
         setOpen(false);

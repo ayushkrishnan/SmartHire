@@ -111,7 +111,6 @@ export default function DashboardJobStatus(){
                             <TableHead>Name</TableHead>
                             <TableHead>Email</TableHead>
                             <TableHead>Score</TableHead>
-                            <TableHead>Suggestions</TableHead>
                             <TableHead>Resume</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
@@ -123,7 +122,6 @@ export default function DashboardJobStatus(){
                                     <TableCell>{application.users.name}</TableCell>
                                     <TableCell>{application.users.email}</TableCell>
                                     <TableCell>{application.applications.score}</TableCell>
-                                    <TableCell>{application.applications.suggestions}</TableCell>
                                     <TableCell>
                                         <Link to={`data:application/pdf;base64,${application.applications.resume}`} target="_blank">
                                             <Button variant={"outline"}>View Application</Button>

@@ -17,8 +17,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-
-import { Link } from "react-router"
+import { redirect } from "react-router"
 
 interface Job {
     id: number
@@ -42,7 +41,10 @@ export default function JobListings() {
     const [jobs, setJobs] = useState<Job[]>([])
     const [applications, setApplications] = useState<Application[]>([])
     const [searchTerm, setSearchTerm] = useState("")
-    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [suggestions, setSuggestions] = useState({
+        score: 0,
+        suggestions: "loading..."
+    })
 
     useEffect(() => {
         (async () => {
@@ -53,6 +55,17 @@ export default function JobListings() {
             const applicationResponse = await fetch("http://localhost:8080/application", {
                 credentials: "include"
             })
+
+            const userResponse = await fetch("http://localhost:8080/user/current", {
+                credentials: "include"
+            })
+
+            if(userResponse.ok){
+                const user = await userResponse.json();
+                if(!user.resume){
+                    redirect("/apply/edit");
+                }
+            }
 
             if (response.ok) {
                 const apiJobs = await response.json();
@@ -66,46 +79,44 @@ export default function JobListings() {
         })()
     }, [])
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            if (file.type === "application/pdf") {
-                setSelectedFile(file);
-            } else {
-                e.target.value = '';
+    const handleOpen = async (jobId: number) => {
+        const apiSuggestsionsResponse = await fetch("http://localhost:8080/application/suggestions", {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify({
+                jobId
+            }),
+            headers: {
+                "Content-Type": "application/json"
             }
+        })
+
+        if(apiSuggestsionsResponse.ok){
+            setSuggestions(await apiSuggestsionsResponse.json())
         }
     }
 
-    const handleSubmit = (jobId: number, e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = async (jobId: number) => {
 
-        const reader = new FileReader();
-        reader.readAsDataURL(selectedFile!);
-
-        reader.onload = async () => {
-            await fetch("http://localhost:8080/application", {
-                method: "POST",
-                credentials: "include",
-                body: JSON.stringify({
-                    resume: reader.result?.toString().replace("data:application/pdf;base64,", ""),
-                    jobId
-                }),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-
-            const applicationResponse = await fetch("http://localhost:8080/application", {
-                credentials: "include"
-            })
-
-            if (applicationResponse.ok) {
-                const apiApplications = await applicationResponse.json();
-                setApplications(apiApplications);
+        await fetch("http://localhost:8080/application", {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify({
+                jobId
+            }),
+            headers: {
+                "Content-Type": "application/json"
             }
-        }
+        })
 
+        const applicationResponse = await fetch("http://localhost:8080/application", {
+            credentials: "include"
+        })
+
+        if (applicationResponse.ok) {
+            const apiApplications = await applicationResponse.json();
+            setApplications(apiApplications);
+        }
     }
 
     return (
@@ -157,44 +168,37 @@ export default function JobListings() {
                             <CardFooter>
                                 {
                                     !applications.find(application => application.jobId === job.id) ?
-                                        <AlertDialog>
+                                        <AlertDialog onOpenChange={(open) => {
+                                            if(open){
+                                                handleOpen(job.id);
+                                            }else{
+                                                setSuggestions({
+                                                    score: 0,
+                                                    suggestions: "loading..."
+                                                })
+                                            }
+                                        }}>
                                             <AlertDialogTrigger asChild>
                                                 <Button className="w-full">Apply Now</Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
-                                                    <AlertDialogTitle>Apply for {job.title}</AlertDialogTitle>
+                                                    <AlertDialogTitle>Before you apply...</AlertDialogTitle>
                                                     <AlertDialogDescription>
-                                                        Upload your resume to apply for this position
+                                                        See what our AI has to say about your resume!
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
-                                                <form onSubmit={(e) => handleSubmit(job.id, e)} className="space-y-4">
-                                                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                                                        <label htmlFor="resume">Resume</label>
-                                                        <Input
-                                                            id="resume"
-                                                            type="file"
-                                                            accept=".pdf"
-                                                            onChange={handleFileChange}
-                                                            className="cursor-pointer"
-                                                        />
-                                                        <p className="text-sm text-muted-foreground">
-                                                            Please upload your resume in PDF format
-                                                        </p>
-                                                    </div>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                        <AlertDialogAction type="submit">
-                                                            Submit Application
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </form>
+                                                <p>
+                                                    <b>Score</b>: {suggestions.score}<br/>
+                                                    {suggestions.suggestions}
+                                                </p>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogAction onClick={() => handleSubmit(job.id)}>Submit Application</AlertDialogAction>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog> :
                                         <div className="flex flex-row gap-2">
-                                            <Link to={`data:application/pdf;base64,${applications.find(application => application.jobId === job.id)?.resume}`} target="_blank">
-                                                <Button variant={"outline"}>View Application</Button>
-                                            </Link>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant={"outline"}>Feedback</Button>
