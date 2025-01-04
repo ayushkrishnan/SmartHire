@@ -2,6 +2,7 @@ import { application, Router } from "express";
 import { validateSession } from "./middleware";
 import { addJob, getJobs, getJob, deleteJob } from "../models/jobs";
 import { getAllApplications, getApplications } from "../models/applications";
+import { generateEmbedding } from "../agent";
 
 
 const jobRouter = Router();
@@ -28,7 +29,7 @@ jobRouter.get("/stats", async (req, res, next) => {
 
 jobRouter.get("/", async (req, res, next) => {
     try {
-        const jobs = await getJobs();
+        const jobs = await getJobs(req.userId!);
         res.json(jobs);
     } catch (error) {
         console.error(error);
@@ -69,7 +70,8 @@ jobRouter.post("/", async (req, res, next) => {
             description,
             department,
             experience,
-            userId: req.userId!
+            userId: req.userId!,
+            embeddings: await generateEmbedding(description)
         }, skills)
         res.json(job);
     } catch (error) {

@@ -1,6 +1,6 @@
-import { eq, InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { cosineDistance, eq, InferInsertModel, InferSelectModel } from "drizzle-orm";
 import db from "./db";
-import { jobs, skills } from "./schema";
+import { jobs, skills, users } from "./schema";
 
 export async function addJob(job: InferInsertModel<typeof jobs>, skillList: string[]){
     const dbJob = await db.insert(jobs).values(job).returning();
@@ -10,8 +10,14 @@ export async function addJob(job: InferInsertModel<typeof jobs>, skillList: stri
     }))).returning();
 }
 
-export async function getJobs() {
-    const dbJobs: (InferSelectModel<typeof jobs> & {skills?: InferSelectModel<typeof skills>[]})[] = await db.select().from(jobs);
+export async function getJobs(userId?: number) {
+    let dbJobs: (InferSelectModel<typeof jobs> & {skills?: InferSelectModel<typeof skills>[]})[];
+    if(userId){
+        const user = (await db.select().from(users).where(eq(users.id, userId)))[0];
+        dbJobs = await db.select().from(jobs).orderBy(cosineDistance(jobs.embeddings, user.resumeEmbeddings!));
+    }else{
+        dbJobs = await db.select().from(jobs);
+    }
 
     for(const job of dbJobs){
         const dbSkills = await db.select().from(skills).where(eq(skills.jobId, job.id));

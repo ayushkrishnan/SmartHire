@@ -2,10 +2,12 @@ import {
     boolean,
     integer,
     pgTable,
+    PgVector,
     serial,
     text,
     timestamp,
-    uuid
+    uuid,
+    vector
 } from "drizzle-orm/pg-core"
 
 export const users = pgTable("users", {
@@ -14,7 +16,9 @@ export const users = pgTable("users", {
     password: text().notNull(),
     name: text().notNull(),
     type: text().notNull().default("applicant"),
-    contact: text()
+    contact: text(),
+    resume: text(),
+    resumeEmbeddings: vector({dimensions: 768})
 });
 
 export const sessions = pgTable("sessions", {
@@ -33,7 +37,8 @@ export const jobs = pgTable("jobs", {
     department: text().notNull(),
     userId: integer().references(() => users.id, {
         onDelete: "cascade"
-    }).notNull()
+    }).notNull(),
+    embeddings: vector({dimensions: 768})
 });
 
 export const skills = pgTable("skills", {
@@ -52,7 +57,6 @@ export const applications = pgTable("applications", {
     jobId: integer().references(() => jobs.id, {
         onDelete: "cascade"
     }),
-    resume: text().notNull(),
     score: integer().notNull().default(0),
     suggestions: text(),
     status: text().default("pending")

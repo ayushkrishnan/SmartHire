@@ -4,12 +4,15 @@ import cors from "cors";
 import userRouter from "./routes/users";
 import jobRouter from "./routes/jobs";
 import applicationRouter from "./routes/applications";
+import { AIMiddleware } from "./routes/middleware";
 
 const app = express();
 app.use(cors({
     origin: ["http://localhost:4173", "http://localhost:5173"],
     credentials: true
 }))
+
+app.use(AIMiddleware)
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());

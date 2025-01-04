@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { validateSession } from "./middleware";
 import { getApplications, getApplication, addApplication, getJobApplications, setApplicationStatus } from "../models/applications";
-import {writeFile} from "node:fs/promises"
 import { gradeResume } from "../agent";
 import { getJob } from "../models/jobs";
 import { btoa } from "node:buffer";
 import pdf from "pdf-parse"
+import { getUser } from "../models/users";
 
 const applicationRouter = Router();
 
@@ -49,6 +49,27 @@ applicationRouter.get("/:id", async (req, res, next) => {
     }
 })
 
+applicationRouter.post("/suggestions", async (req, res, next) => {
+    try {
+        const userId = req.userId;
+        const {jobId} = req.body;
+
+        const job = await getJob(jobId);
+        const user = await getUser(userId!);
+
+        const pdfData = await pdf(Buffer.from(user?.resume!, "base64"))
+
+        const analysis = await gradeResume(pdfData.text, job.title, job.description, job.experience!)
+        console.log(analysis)
+
+        res.json(analysis)
+    } catch (error) {
+        console.error(error)
+        res.send(500)
+        next(error)
+    }
+})
+
 applicationRouter.post("/status/:id", async (req, res, next) => {
     try {
         setApplicationStatus(Number(req.params.id), req.body.status);
@@ -63,11 +84,12 @@ applicationRouter.post("/status/:id", async (req, res, next) => {
 applicationRouter.post("/", async (req, res, next) => {
     try {
         const userId = req.userId;
-        const {resume, jobId} = req.body;
+        const {jobId} = req.body;
 
-        const job = await getJob(jobId)
+        const job = await getJob(jobId);
+        const user = await getUser(userId!);
 
-        const pdfData = await pdf(Buffer.from(resume, "base64"))
+        const pdfData = await pdf(Buffer.from(user?.resume!, "base64"))
 
         const analysis = await gradeResume(pdfData.text, job.title, job.description, job.experience!)
         console.log(analysis)
@@ -75,7 +97,6 @@ applicationRouter.post("/", async (req, res, next) => {
         await addApplication({
             userId,
             jobId,
-            resume,
             score: analysis.score,
             suggestions: analysis.suggestions
         })

@@ -2,6 +2,8 @@ import { Router } from "express";
 import { validateSession } from "./middleware";
 import { addUser, getUser, getUsers, editUser, login, UserNotFoundError } from "../models/users";
 import { addSession, deleteSession, getSessionUser } from "../models/sessions";
+import pdf from "pdf-parse"
+import { generateEmbedding, getQualifications } from "../agent";
 
 const userRouter = Router();
 
@@ -94,10 +96,15 @@ userRouter.post("/add", validateSession({type: ["admin"]}), async (req, res, nex
 
 userRouter.post("/edit", validateSession({type: ["applicant"]}),async (req, res, next) => {
     try {
+        const pdfData = await pdf(Buffer.from(req.body.resume, "base64"))
+        const qualitifications = await getQualifications(pdfData.text)
+        const embeddings = await generateEmbedding(qualitifications.skills.join(", "))
+
         await editUser({
             ...req.body,
             id: req.userId,
-            type: "applicant"
+            type: "applicant",
+            resumeEmbeddings: embeddings
         });
         res.sendStatus(200);
     } catch (error) {

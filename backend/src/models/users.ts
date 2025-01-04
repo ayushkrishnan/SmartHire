@@ -37,7 +37,9 @@ export async function editUser(user: InferInsertModel<typeof users>){
         email: user.email,
         password: hash(user.password),
         type: user.type,
-        contact: user.contact
+        contact: user.contact,
+        resume: user.resume ?? null,
+        resumeEmbeddings: user.resumeEmbeddings
     }).where(eq(users.id, user.id!));
 }
 
@@ -47,7 +49,8 @@ export async function getUser(userId: number){
         email: users.email,
         name: users.name,
         type: users.type,
-        contact: users.contact
+        contact: users.contact,
+        resume: users.resume
     }).from(users).where(eq(users.id, userId));
 
     if(userList.length === 0){
