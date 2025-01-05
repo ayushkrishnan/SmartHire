@@ -20,6 +20,7 @@ export function JobCard({ id, title, description, experience, department, onDele
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>{department}</CardDescription>
+            
             </CardHeader>
             <CardContent className="flex flex-col">
                 <p className="text-sm text-muted-foreground mb-2">{description}</p>

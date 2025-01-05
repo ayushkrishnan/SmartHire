@@ -153,6 +153,8 @@ export default function JobListings() {
                                 <p className="text-sm text-muted-foreground mb-4">{job.description}</p>
                                 <Separator className="my-4 mt-auto" />
                                 <p className="text-sm font-medium">Department: {job.department}</p>
+                                {/* <Separator className="my-4 mt-auto" />
+                                <p className="text-sm font-medium">Skills: {job.skills}</p> */}
                             </CardContent>
                             <CardFooter>
                                 {

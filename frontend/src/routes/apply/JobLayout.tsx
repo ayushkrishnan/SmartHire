@@ -73,11 +73,19 @@ export default function ApplicantLayout(){
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link to="https://rxresu.me/">
+                                    <Link to="https://rxresu.me/dashboard/resumes">
                                         <FileBadgeIcon className="mr-2 h-4 w-4" />
                                         <span>Build your resume!</span>
                                     </Link>
                                 </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                {/* <SidebarMenuButton asChild>
+                                    <Link to="/404">
+                                        <FileBadgeIcon className="mr-2 h-4 w-4" />
+                                        <span>Community message</span>
+                                    </Link>
+                                </SidebarMenuButton> */}
                             </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarContent>
