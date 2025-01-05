@@ -23,7 +23,7 @@ export function JobCard({ id, title, description, experience, department, onDele
             
             </CardHeader>
             <CardContent className="flex flex-col">
-                <p className="text-sm text-muted-foreground mb-2">{description}</p>
+                <p className="text-sm text-muted-foreground mb-2 max-h-96 overflow-hidden text-ellipsis">{description}</p>
                 <p className="text-sm font-semibold mt-auto">Experience: {experience}</p>
             </CardContent>
             <CardFooter className="flex flex-row gap-2">

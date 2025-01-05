@@ -4,6 +4,7 @@ import { addUser, getUser, getUsers, editUser, login, UserNotFoundError } from "
 import { addSession, deleteSession, getSessionUser } from "../models/sessions";
 import pdf from "pdf-parse"
 import { generateEmbedding, getQualifications } from "../agent";
+import { sendMail } from "../email";
 
 const userRouter = Router();
 
@@ -75,6 +76,14 @@ userRouter.get("/logout", async (req, res, next) => {
 userRouter.post("/signup", async (req, res, next) => {
     try{
         await addUser(req.body);
+        await sendMail([req.body.email], "Welcome to smarthire", `
+            <html>
+            <body>
+            <h1>Welcome to SmartHire!</h1>
+            <a href="http://localhost:5173/login">Login to your account to confirm your email</a>
+            </body>
+            </html>
+        `)
         res.sendStatus(200);
     }catch(error){
         res.sendStatus(500);
