@@ -14,6 +14,11 @@
         "POSTGRES_USER": "postgres",
         "POSTGRES_PASSWORD": "password",
         "POSTGRES_DB": "smarthire",
-        "GROQ_API_KEY":"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"
+        "GROQ_API_KEY": "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",
+        "EMAIL_USER": "milansuman2016@gmail.com",
+        "EMAIL_REFRESH_TOKEN": "1//04H3uE3ZeIko4CgYIARAAGAQSNwF-L9IrQ8f7Gd35o8DU8i5aIGSBjPphM3wpurOYk3yoJBpXo707gw2L8Hc2hIYzmJraOkmySwg",
+        "EMAIL_ACCESS_TOKEN": "ya29.a0AeDClZCPfcUIz1W3rxQ_3s3xCBJ40viHD--WKWMs4Kj8e303M8_jkMDBbkmN46jSdTGa7_aVK0jCOSRlPgcZlzD1JkR5aItuMIrywI8zNJVJEfGsJzTN6BbcCMFY-zSaaCQ4LU-R_M26-iV-pLPXMhoiZkO9S1FWOuaePmlRaCgYKASISARASFQHGX2MirVAgkdAE2kbaLQv1l4FNWw0175",
+        "EMAIL_CLIENT_ID": "685404771254-m24fcuq80j5kbiotprs25lqauv1ggnbm.apps.googleusercontent.com",
+        "EMAIL_CLIENT_SECRET": "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"
     }
 }
