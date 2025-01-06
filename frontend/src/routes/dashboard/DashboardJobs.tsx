@@ -48,7 +48,7 @@ export default function DashboardJobs() {
             title: formData.get('title') as string,
             description: formData.get('description') as string,
             experience: formData.get('experience') as string,
-            department: formData.get('department') as string,
+            // department: formData.get('department') as string,
             skills: (formData.get("skills") as string).split(",").map(skill => skill.trim())
         }
 
@@ -121,16 +121,18 @@ export default function DashboardJobs() {
                                         <SelectValue placeholder="Select experience level" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Entry level">Entry level</SelectItem>
-                                        <SelectItem value="Mid level">Mid level</SelectItem>
-                                        <SelectItem value="Senior">Senior</SelectItem>
+                                        <SelectItem value="Fesher">0 Years</SelectItem>
+                                        <SelectItem value="Entery level">1 - 3 Years </SelectItem>
+                                        <SelectItem value="Mid Level">3 - 5 Years</SelectItem>
+                                        <SelectItem value="Senior">5 - 7 Years</SelectItem>
+                                        <SelectItem value="Senior2"> 7+ Years</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="department">Department</Label>
                                 <Input id="department" name="department" placeholder="Department" required />
-                            </div>
+                            </div> */}
                             <div className="space-y-2">
                                 <Label htmlFor="skills">Skills (comma-separated)</Label>
                                 <Input id="skills" name="skills" placeholder="e.g. React, TypeScript, CSS" required />
