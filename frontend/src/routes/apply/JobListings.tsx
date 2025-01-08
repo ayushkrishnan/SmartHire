@@ -191,9 +191,9 @@ export default function JobListings() {
                                                         See what our AI has to say about your resume!
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
-                                                <p className="max-h-96 overflow-scroll">
+                                                <p className="max-h-96 overflow-y-auto">
                                                     <b>Score</b>: {suggestions.score}<br />
-                                                    <MarkDown>{suggestions.suggestions}</MarkDown>
+                                                    <MarkDown className="md">{suggestions.suggestions}</MarkDown>
                                                 </p>
                                                 <AlertDialogFooter>
                                                     <AlertDialogAction onClick={() => handleSubmit(job.id)}>Submit Application</AlertDialogAction>
@@ -209,8 +209,8 @@ export default function JobListings() {
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
                                                         <AlertDialogTitle>Application Feedback</AlertDialogTitle>
-                                                        <AlertDialogDescription className="max-h-96 overflow-scroll">
-                                                            <MarkDown>
+                                                        <AlertDialogDescription className="max-h-96 overflow-y-auto">
+                                                            <MarkDown className="md flex flex-col gap-2">
                                                                 {applications.find(application => application.jobId === job.id)?.suggestions}
                                                             </MarkDown>
                                                         </AlertDialogDescription>

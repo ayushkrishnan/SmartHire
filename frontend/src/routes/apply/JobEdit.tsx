@@ -6,7 +6,7 @@ import { FormEvent } from "react"
 import {Toaster} from "@/components/ui/sonner"
 
 import { useState, useEffect } from "react"
-import { Link, redirect } from "react-router"
+import { Link } from "react-router"
 
 export default function ApplicantEditUser(){
     const [details, setDetails] = useState({

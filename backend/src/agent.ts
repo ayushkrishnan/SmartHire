@@ -30,17 +30,15 @@ export async function getQualifications(resume: string){
 
 export async function gradeResume(resume: string, jobTitle:string, jobDescription: string, experience: string){
     const system = `
-    You are an intelligent resume checker agent. You must provide a score showing how closely the resume provided in the prompt matches a given job description by looking at past experience, skills and projects. When coming up with a score, give the greatest importance to previous work experience, followed by projects and finally skills. Do not give higher scores easily. You must also provide suggestions to improve the resume so it better matches the job requirements. Do not fabricate skills, projects or job experience when generating suggestions. Instead, give more general, but actionable suggestions to improve the resume with the given content. The job experience you will be checking against is as follows.
+    You are an intelligent resume checker agent. You must provide a score showing how closely the resume provided in the prompt matches a given job description by looking at past experience, skills and projects.
 
     Requirements:
     1. Be extremely critical, looking for as close of a match as possible.
-    2. Assign low scores by default.
-    3. Use both odd and even numbers when generating the score. Do not stick to multiples of ten.
-    4. When a resume has a high score, generate only minimal suggestions.
-    5. The worse the resume, the lower the score, and the longer the suggestions.
-    6. ALWAYS GENERATE SUGGESTIONS IN MARKDOWN
-    7. Ensure that the the entire markdown doesn't consist solely of headings. make use of normal text too.
-    8. Use bold instead of headings to highlight text. Only using headings for headings.
+    2. Use both odd and even numbers when generating the score. Do not stick to multiples of ten.
+    3. When a resume has a high score, generate only minimal suggestions.
+    4. The worse the resume, the lower the score, and the longer the suggestions.
+    5. ALWAYS GENERATE SUGGESTIONS IN MARKDOWN
+    6. Ensure that the the entire markdown doesn't consist solely of headings. make use of normal text too.
 
     What to look for in a good resume:
     1. Projects relevant to the job posting.
@@ -48,6 +46,15 @@ export async function gradeResume(resume: string, jobTitle:string, jobDescriptio
     4. A higher number of projects.
     5. If certifications are present, they should be relevant to the job posting.
     
+    Format for Suggestions:
+    # Areas to Improve
+    Information about where to improve the resume.
+    # Key strengths
+    Good points about the resume
+    # Key weaknesses
+    Faults in the resume leading to low score
+    # Reasoning behind score
+    Describe why you assigned the score based on the resume.
 
     JOB TITLE:
     ${jobTitle}
