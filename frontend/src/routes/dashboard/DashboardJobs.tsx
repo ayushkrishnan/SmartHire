@@ -121,8 +121,8 @@ export default function DashboardJobs() {
                                         <SelectValue placeholder="Select experience level" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Fesher">0 Years</SelectItem>
-                                        <SelectItem value="Entery level">1 - 3 Years </SelectItem>
+                                        <SelectItem value="Fresher">0 Years</SelectItem>
+                                        <SelectItem value="Entry level">1 - 3 Years </SelectItem>
                                         <SelectItem value="Mid Level">3 - 5 Years</SelectItem>
                                         <SelectItem value="Senior">5 - 7 Years</SelectItem>
                                         <SelectItem value="Senior2"> 7+ Years</SelectItem>
