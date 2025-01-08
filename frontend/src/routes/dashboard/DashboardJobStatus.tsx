@@ -95,7 +95,7 @@ export default function DashboardJobStatus(){
         <div className="flex flex-col w-full h-full gap-2 text-neutral-600">
             <div className="p-3 flex flex-col gap-2 rounded-md border border-neutral-200">
                 <h1 className="text-xl font-bold text-black">{job?.title}</h1>
-                <h2>Department: {job?.department}</h2>
+                {/* <h2>Department: {job?.department}</h2> */}
                 <p>{job?.description}</p>
                 <div className="flex flex-row gap-2 text-neutral-900">
                     {

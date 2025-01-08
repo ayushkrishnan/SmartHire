@@ -62,13 +62,12 @@ jobRouter.delete("/:id", async (req, res, next) => {
 });
 
 jobRouter.post("/", async (req, res, next) => {
-    const {skills, title, description, department, experience} = req.body;
+    const {skills, title, description,  experience} = req.body;
 
     try {
         const job = await addJob({
             title,
             description,
-            department,
             experience,
             userId: req.userId!,
             embeddings: await generateEmbedding(description)

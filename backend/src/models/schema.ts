@@ -35,7 +35,6 @@ export const jobs = pgTable("jobs", {
     title: text().notNull(),
     description: text().notNull(),
     experience: text().default("Entry level"),
-    department: text(),
     userId: integer().references(() => users.id, {
         onDelete: "cascade"
     }).notNull(),
