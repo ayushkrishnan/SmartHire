@@ -191,7 +191,7 @@ export default function JobListings() {
                                                         See what our AI has to say about your resume!
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
-                                                <p>
+                                                <p className="max-h-96 overflow-scroll">
                                                     <b>Score</b>: {suggestions.score}<br />
                                                     <MarkDown>{suggestions.suggestions}</MarkDown>
                                                 </p>
@@ -209,7 +209,7 @@ export default function JobListings() {
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
                                                         <AlertDialogTitle>Application Feedback</AlertDialogTitle>
-                                                        <AlertDialogDescription>
+                                                        <AlertDialogDescription className="max-h-96 overflow-scroll">
                                                             <MarkDown>
                                                                 {applications.find(application => application.jobId === job.id)?.suggestions}
                                                             </MarkDown>

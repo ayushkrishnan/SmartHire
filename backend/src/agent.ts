@@ -39,6 +39,7 @@ export async function gradeResume(resume: string, jobTitle:string, jobDescriptio
     4. When a resume has a high score, generate only minimal suggestions.
     5. The worse the resume, the lower the score, and the longer the suggestions.
     6. ALWAYS GENERATE SUGGESTIONS IN MARKDOWN
+    7. Ensure that the the entire markdown doesn't consist solely of headings. make use of normal text too.
 
     What to look for in a good resume:
     1. Projects relevant to the job posting.
