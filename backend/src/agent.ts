@@ -38,6 +38,7 @@ export async function gradeResume(resume: string, jobTitle:string, jobDescriptio
     3. Use both odd and even numbers when generating the score. Do not stick to multiples of ten.
     4. When a resume has a high score, generate only minimal suggestions.
     5. The worse the resume, the lower the score, and the longer the suggestions.
+    6. ALWAYS GENERATE SUGGESTIONS IN MARKDOWN
 
     What to look for in a good resume:
     1. Projects relevant to the job posting.

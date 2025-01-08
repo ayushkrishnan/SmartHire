@@ -113,7 +113,8 @@ userRouter.post("/edit", validateSession({type: ["applicant"]}),async (req, res,
             ...req.body,
             id: req.userId,
             type: "applicant",
-            resumeEmbeddings: embeddings
+            resumeEmbeddings: embeddings,
+            qualifications: qualitifications.skills.join(", ")
         });
         res.sendStatus(200);
     } catch (error) {

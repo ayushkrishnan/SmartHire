@@ -39,7 +39,8 @@ export async function editUser(user: InferInsertModel<typeof users>){
         type: user.type,
         contact: user.contact,
         resume: user.resume ?? null,
-        resumeEmbeddings: user.resumeEmbeddings
+        resumeEmbeddings: user.resumeEmbeddings,
+        qualifications: user.qualifications
     }).where(eq(users.id, user.id!));
 }
 
@@ -50,7 +51,8 @@ export async function getUser(userId: number){
         name: users.name,
         type: users.type,
         contact: users.contact,
-        resume: users.resume
+        resume: users.resume,
+        qualifications: users.qualifications
     }).from(users).where(eq(users.id, userId));
 
     if(userList.length === 0){
@@ -66,7 +68,8 @@ export async function getUsers(){
         email: users.email,
         name: users.name,
         type: users.type,
-        contact: users.contact
+        contact: users.contact,
+        qualifications: users.qualifications
     }).from(users);
 }
 

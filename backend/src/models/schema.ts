@@ -18,6 +18,7 @@ export const users = pgTable("users", {
     type: text().notNull().default("applicant"),
     contact: text(),
     resume: text(),
+    qualifications: text(),
     resumeEmbeddings: vector({dimensions: 768})
 });
 
@@ -34,7 +35,7 @@ export const jobs = pgTable("jobs", {
     title: text().notNull(),
     description: text().notNull(),
     experience: text().default("Entry level"),
-    department: text().notNull(),
+    department: text(),
     userId: integer().references(() => users.id, {
         onDelete: "cascade"
     }).notNull(),
