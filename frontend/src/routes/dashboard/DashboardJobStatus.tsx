@@ -113,7 +113,7 @@ export default function DashboardJobStatus(){
                             <TableHead>Email</TableHead>
                             <TableHead>Score</TableHead>
                             <TableHead>Resume</TableHead>
-                            <TableHead>Qualifications</TableHead>
+                            <TableHead>Skills</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
