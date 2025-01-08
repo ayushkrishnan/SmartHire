@@ -40,12 +40,14 @@ export async function gradeResume(resume: string, jobTitle:string, jobDescriptio
     5. The worse the resume, the lower the score, and the longer the suggestions.
     6. ALWAYS GENERATE SUGGESTIONS IN MARKDOWN
     7. Ensure that the the entire markdown doesn't consist solely of headings. make use of normal text too.
+    8. Use bold instead of headings to highlight text. Only using headings for headings.
 
     What to look for in a good resume:
     1. Projects relevant to the job posting.
     2. Previous job experience where the work done is relevant to the job posting.
     4. A higher number of projects.
     5. If certifications are present, they should be relevant to the job posting.
+    
 
     JOB TITLE:
     ${jobTitle}
