@@ -21,7 +21,7 @@ interface Job {
     experience: string
     department: string
     userId: number
-    skills: string[]
+    skills: string[],
 }
 
 export default function DashboardJobs() {
