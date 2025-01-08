@@ -18,6 +18,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { redirect } from "react-router"
+import MarkDown from "react-markdown"
 
 interface Job {
     id: number
@@ -60,9 +61,9 @@ export default function JobListings() {
                 credentials: "include"
             })
 
-            if(userResponse.ok){
+            if (userResponse.ok) {
                 const user = await userResponse.json();
-                if(!user.resume){
+                if (!user.resume) {
                     redirect("/apply/edit");
                 }
             }
@@ -91,7 +92,7 @@ export default function JobListings() {
             }
         })
 
-        if(apiSuggestsionsResponse.ok){
+        if (apiSuggestsionsResponse.ok) {
             setSuggestions(await apiSuggestsionsResponse.json())
         }
     }
@@ -171,9 +172,9 @@ export default function JobListings() {
                                 {
                                     !applications.find(application => application.jobId === job.id) ?
                                         <AlertDialog onOpenChange={(open) => {
-                                            if(open){
+                                            if (open) {
                                                 handleOpen(job.id);
-                                            }else{
+                                            } else {
                                                 setSuggestions({
                                                     score: 0,
                                                     suggestions: "loading..."
@@ -191,8 +192,8 @@ export default function JobListings() {
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <p>
-                                                    <b>Score</b>: {suggestions.score}<br/>
-                                                    {suggestions.suggestions}
+                                                    <b>Score</b>: {suggestions.score}<br />
+                                                    <MarkDown>{suggestions.suggestions}</MarkDown>
                                                 </p>
                                                 <AlertDialogFooter>
                                                     <AlertDialogAction onClick={() => handleSubmit(job.id)}>Submit Application</AlertDialogAction>
@@ -209,7 +210,9 @@ export default function JobListings() {
                                                     <AlertDialogHeader>
                                                         <AlertDialogTitle>Application Feedback</AlertDialogTitle>
                                                         <AlertDialogDescription>
-                                                            {applications.find(application => application.jobId === job.id)?.suggestions}
+                                                            <MarkDown>
+                                                                {applications.find(application => application.jobId === job.id)?.suggestions}
+                                                            </MarkDown>
                                                         </AlertDialogDescription>
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>

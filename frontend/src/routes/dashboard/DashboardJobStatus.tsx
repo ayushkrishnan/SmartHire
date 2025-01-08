@@ -27,14 +27,15 @@ interface Application {
     applications: {
         id: number,
         jobId: number,
-        resume: string,
         score: number,
         suggestions: string,
         status: "accepted" | "rejected" | "pending"
     },
     users: {
         email: string,
-        name: string
+        name: string,
+        qualifications: string,
+        resume: string
     }
 }
 
@@ -112,6 +113,7 @@ export default function DashboardJobStatus(){
                             <TableHead>Email</TableHead>
                             <TableHead>Score</TableHead>
                             <TableHead>Resume</TableHead>
+                            <TableHead>Skills</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -123,10 +125,11 @@ export default function DashboardJobStatus(){
                                     <TableCell>{application.users.email}</TableCell>
                                     <TableCell>{application.applications.score}</TableCell>
                                     <TableCell>
-                                        <Link to={`data:application/pdf;base64,${application.applications.resume}`} target="_blank">
+                                        <Link to={`data:application/pdf;base64,${application.users.resume}`} target="_blank">
                                             <Button variant={"outline"}>View Application</Button>
                                         </Link>
                                     </TableCell>
+                                    <TableCell>{application.users.qualifications}</TableCell>
                                     <TableCell>
                                         {
                                             application.applications.status === "pending" ?

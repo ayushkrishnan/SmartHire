@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateSession } from "./middleware";
 import { getApplications, getApplication, addApplication, getJobApplications, setApplicationStatus } from "../models/applications";
-import { gradeResume } from "../agent";
+import { getQualifications, gradeResume } from "../agent";
 import { getJob } from "../models/jobs";
 import { btoa } from "node:buffer";
 import pdf from "pdf-parse"

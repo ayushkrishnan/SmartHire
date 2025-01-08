@@ -12,7 +12,7 @@ app.use(cors({
     credentials: true
 }))
 
-app.use(AIMiddleware)
+// app.use(AIMiddleware) DO NOT UNCOMMENT
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());

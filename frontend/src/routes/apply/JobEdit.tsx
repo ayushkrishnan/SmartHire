@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
 import { FormEvent } from "react"
 import {Toaster} from "@/components/ui/sonner"
@@ -12,7 +13,8 @@ export default function ApplicantEditUser(){
         name: "",
         email: "",
         contact: "",
-        resume: ""
+        resume: "",
+        qualifications: ""
     })
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
@@ -69,12 +71,13 @@ export default function ApplicantEditUser(){
     
             if(response.ok){
                 toast("User Edited!");
-                setDetails({
-                    name: username as string,
-                    email: email as string,
-                    contact: contact as string,
-                    resume: reader.result?.toString().replace("data:application/pdf;base64,", "") as string
-                });
+                const newResponse = await fetch("http://localhost:8080/user/current", {
+                    credentials: "include"
+                })
+    
+                if(newResponse.ok){
+                    setDetails(await newResponse.json())
+                }
                 (event.target as HTMLFormElement).reset();
             }else{
                 toast("Something went wrong");
@@ -96,6 +99,8 @@ export default function ApplicantEditUser(){
                 <Input name="password" type="password" placeholder="Enter a secure password" required/>
                 <label>Resume (Less than 1MB)</label>
                 <Input name="resume" type="file" required onChange={handleFileChange}/>
+                <label>Skills</label>
+                <Textarea defaultValue={details.qualifications} disabled/>
                 <Button type="submit">Edit user</Button>
                 {
                     details.resume && 
