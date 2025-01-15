@@ -1,4 +1,5 @@
 import { signIn } from "@/auth"
+import { Button } from "../ui/button"
  
 export function SignIn() {
   return (
@@ -8,7 +9,7 @@ export function SignIn() {
         await signIn()
       }}
     >
-      <button type="submit" className="bg-blue-600 hover:bg-blue-500 font-bold rounded-full text-white p-2 px-4">Sign in</button>
+      <Button type="submit" className="rounded-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold">Sign In</Button>
     </form>
   )
 }
