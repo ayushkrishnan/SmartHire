@@ -28,11 +28,14 @@ import { Button } from "../ui/button";
 import { FormEvent } from "react";
 import Link from "next/link";
 
+import { Trash } from "lucide-react";
+
 export function HRPage({
     name,
     jobs,
     onNewJob,
-    onEditJob
+    onEditJob,
+    onDeleteJob
 }: {
     name: string,
     jobs: {
@@ -58,7 +61,8 @@ export function HRPage({
         skills: string | null,
         pay: string | null,
         company: string | null
-    }[]>
+    }[]>,
+    onDeleteJob: (jobId: number) => Promise<void>
 }) {
     const [jobList, setJobList] = useState(jobs);
     const [isOpen, setOpen] = useState(false);
@@ -81,6 +85,11 @@ export function HRPage({
 
         const newJobs = await onEditJob(formData, jobId);
         setJobList(newJobs);
+    }
+
+    const handleDelete = async (jobId: number) => {
+        onDeleteJob(jobId);
+        setJobList((prevJobs) => prevJobs.filter(job => job.id !== jobId));
     }
 
     return (
@@ -174,6 +183,9 @@ export function HRPage({
                                     <Link href={`/hr/${job.id}`}>
                                         <Button className="rounded-full bg-blue-600 hover:bg-blue-500">View job</Button>
                                     </Link>
+                                    <Button variant="ghost" className="ml-auto w-fit rounded-full" onClick={() => handleDelete(job.id)}>
+                                        <Trash/>
+                                    </Button>
                                 </div>
                             </div>
                         ))

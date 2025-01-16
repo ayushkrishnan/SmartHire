@@ -1,6 +1,6 @@
 "use server";
 
-import { addJob, getJobs, updateJob } from "@/lib/db/jobs";
+import { addJob, getJobs, updateJob, deleteJob } from "@/lib/db/jobs";
 
 export async function createJob(formData: FormData) {
     return await addJob({
@@ -21,4 +21,8 @@ export async function editJob(formData: FormData, jobId: number){
         company: formData.get('company') as string
     });
     return await getJobs();
+}
+
+export async function removeJob(jobId: number){
+    await deleteJob(jobId);
 }
