@@ -5,6 +5,7 @@ import {
   text,
   primaryKey,
   integer,
+  serial,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
 
@@ -91,3 +92,12 @@ export const authenticators = pgTable(
     },
   ]
 )
+
+export const jobs = pgTable("jobs", {
+  id: serial().primaryKey(),
+  name: text(),
+  description: text(),
+  skills: text(),
+  pay: text(),
+  company: text()
+})
