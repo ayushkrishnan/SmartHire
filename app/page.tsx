@@ -28,8 +28,8 @@ export default async function Home() {
       <nav className="flex flex-row p-4 px-6 items-center fixed w-full backdrop-blur-lg">
         <h2 className="text-2xl font-bold text-white">SmartHire</h2>
         <div className="ml-auto flex flex-row gap-2 items-center">
-          <Link href="/resumeupload">
-            <Button className="rounded-full py-2 bg-white hover:bg-neutral-200 text-black font-bold">Resume Analyzer</Button>
+          <Link href="/resumebuilder">
+            <Button className="rounded-full py-2 bg-white hover:bg-neutral-200 text-black font-bold">Resume Builder</Button>
           </Link>
           {
             session ? 

@@ -101,3 +101,41 @@ export const jobs = pgTable("jobs", {
   pay: text(),
   company: text()
 })
+
+export const resumes = pgTable("resumes", {
+  id: serial().primaryKey(),
+  userId: text().references(() => users.id, {
+    onDelete: "cascade"
+  }),
+  url: text(),
+  name: text(),
+  objective: text(),
+  email: text(),
+  phone: text(),
+  website: text(),
+  location: text(),
+  college: text(),
+  date: text(),
+  degree: text(),
+  skills: text()
+})
+
+export const works = pgTable("works", {
+  id: serial().primaryKey(),
+  company: text(),
+  title: text(),
+  date: text(),
+  description: text(),
+  resumeId: integer().references(() => resumes.id, {
+    onDelete: "cascade"
+  })
+})
+
+export const projects = pgTable("projects", {
+  id: serial().primaryKey(),
+  name: text(),
+  description: text(),
+  resumeId: integer().references(() => resumes.id, {
+    onDelete: "cascade"
+  })
+})
