@@ -3,11 +3,22 @@
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ResumePDF } from "./resume";
-import { PDFViewer } from "@react-pdf/renderer";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { ShinyButton } from "../ui/shiny-button";
+import { useSearchParams } from "next/navigation";
+
+import dynamic from "next/dynamic";
+
+const PDFViewer = dynamic(
+  () => import("./pdf-viewer"),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>,
+  },
+);
+
 
 import {
     AlertDialog,
@@ -20,6 +31,7 @@ import {
     AlertDialogCancel,
     AlertDialogFooter
 } from "../ui/alert-dialog"
+
 
 interface WorkExperience {
     company: string;
@@ -53,73 +65,37 @@ interface ResumeData {
     education: Education;
 }
 
-export function ResumeBuilder() {
+export function ResumeBuilder({
+    onUpload,
+    onImprove
+}: {
+    onUpload: (resumeFile: string) => Promise<ResumeData>,
+    onImprove: (resumeJson: string, jobId?: number) => Promise<ResumeData>
+}) {
+    const searchParams = useSearchParams();
     const [formData, setFormData] = useState<ResumeData>({
-        name: "Jane Smith",
-        email: "jane.smith@email.com",
-        phone: "(555) 123-4567",
-        location: "San Francisco, CA",
-        introduction: "Results-driven software engineer with 3 years of experience in full-stack development. Passionate about creating scalable web applications and solving complex problems through elegant solutions.",
-        workExperience: [
-            {
-                company: "Tech Solutions Inc.",
-                position: "Software Engineer",
-                location: "San Francisco, CA",
-                duration: "June 2021 - Present",
-                details: [
-                    "Developed and maintained RESTful APIs serving 100K+ daily users",
-                    "Reduced application load time by 40% through code optimization",
-                    "Led a team of 3 developers in redesigning the customer dashboard"
-                ]
-            },
-            {
-                company: "StartUp Co.",
-                position: "Junior Developer",
-                location: "Oakland, CA",
-                duration: "January 2020 - May 2021",
-                details: [
-                    "Built responsive web interfaces using React and TypeScript",
-                    "Implemented automated testing, achieving 85% code coverage",
-                    "Collaborated with UX team to improve user experience"
-                ]
-            }
-        ],
-        projects: [
-            {
-                name: "E-commerce Platform",
-                details: [
-                    "Built a full-stack e-commerce platform using Next.js and PostgreSQL",
-                    "Implemented secure payment processing with Stripe",
-                    "Deployed and maintained AWS infrastructure"
-                ]
-            },
-            {
-                name: "Task Management App",
-                details: [
-                    "Created a React Native mobile app for task management",
-                    "Integrated real-time updates using Firebase",
-                    "Published to both iOS and Android app stores"
-                ]
-            }
-        ],
-        skills: [
-            "JavaScript/TypeScript",
-            "React/Next.js",
-            "Node.js",
-            "Python",
-            "PostgreSQL",
-            "AWS",
-            "Docker",
-            "Git",
-            "Agile/Scrum"
-        ],
+        name: "John Doe",
+        email: "john.doe@example.com",
+        phone: "123-456-7890",
+        location: "Sample Location",
+        introduction: "Sample Introduction",
+        workExperience: [],
+        projects: [],
+        skills: [],
         education: {
-            school: "University of California, Berkeley",
+            school: "Sample University",
             degree: "B.S. Computer Science",
-            location: "Berkeley, CA",
-            duration: "2016 - 2020"
-        }
+            location: "Sample City",
+            duration: "2016-2020",
+        },
     });
+
+    const [isClient, setIsClient] = useState(false);
+    const [uploadedResume, setUploadedResume] = useState<File>()
+
+    useState(() => {
+        setIsClient(true);
+    })
 
     const handleBasicChange = (field: keyof ResumeData, value: string | string[]): void => {
         setFormData(prev => ({
@@ -179,13 +155,56 @@ export function ResumeBuilder() {
         }));
     };
 
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setUploadedResume(file);
+        }
+    };
+
+    const uploadResume = async (event: FormEvent) => {
+        event.preventDefault();
+        const buffer = await uploadedResume!.arrayBuffer();
+        const resumeBuffer = Buffer.from(buffer).toString("base64");
+
+        // Call the onUpload function
+        const parsedData = await onUpload(resumeBuffer);
+        console.log(parsedData)
+
+        // Update form data with parsed resume data
+        setFormData(parsedData);
+    }
+
+    const improveResume = async () => {
+        setFormData({
+            name: "John Doe",
+            email: "john.doe@example.com",
+            phone: "123-456-7890",
+            location: "Sample Location",
+            introduction: "Sample Introduction",
+            workExperience: [],
+            projects: [],
+            skills: [],
+            education: {
+                school: "Sample University",
+                degree: "B.S. Computer Science",
+                location: "Sample City",
+                duration: "2016-2020",
+            },
+        })
+        const jobId = searchParams.get("job");
+
+        const parsedData = await onImprove(JSON.stringify(formData), jobId ? Number(jobId) : undefined)
+        setFormData(parsedData);
+    }
+
     return (
         <div className="flex flex-row p-6 h-full gap-3 overflow-hidden">
             <div className="flex flex-col gap-4 w-1/2 h-full overflow-auto">
                 {/* Basic Information */}
                 <div className="flex flex-col gap-2 rounded-md border border-neutral-300 p-10">
                     <div className="flex flex-row gap-2">
-                        <ShinyButton className="rounded-full">Improve Resume</ShinyButton>
+                        <ShinyButton className="rounded-full" onClick={() => improveResume()}>Improve Resume</ShinyButton>
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button className="rounded-full">Upload resume</Button>
@@ -195,9 +214,9 @@ export function ResumeBuilder() {
                                     <AlertDialogTitle>Upload your resume</AlertDialogTitle>
                                     <AlertDialogDescription>We'll take care of the rest</AlertDialogDescription>
                                 </AlertDialogHeader>
-                                <form className="flex flex-col gap-2">
+                                <form className="flex flex-col gap-2" onSubmit={uploadResume}>
                                     <label>Upload</label>
-                                    <Input type="file" name="resume" accept=".pdf" />
+                                    <Input type="file" name="resume" accept=".pdf" onChange={handleFileChange} />
                                     <AlertDialogFooter>
                                         <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
                                         <AlertDialogAction type="submit" className="rounded-full">Continue</AlertDialogAction>
@@ -371,9 +390,12 @@ export function ResumeBuilder() {
             </div>
 
             <div className="flex h-full w-1/2">
-                <PDFViewer className="w-full rounded-md">
-                    <ResumePDF data={formData} />
-                </PDFViewer>
+                {
+                    isClient &&
+                    <PDFViewer className="w-full rounded-md">
+                        <ResumePDF data={formData} />
+                    </PDFViewer>
+                }
             </div>
         </div>
     );

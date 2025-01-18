@@ -6,6 +6,10 @@ export async function getJobs(){
     return await db.select().from(jobs);
 }
 
+export async function getJob(jobId: number){
+    return (await db.select().from(jobs).where(eq(jobs.id, jobId)))[0];
+}
+
 export async function addJob(job: InferInsertModel<typeof jobs>){
     return await db.insert(jobs).values(job).returning();
 }
