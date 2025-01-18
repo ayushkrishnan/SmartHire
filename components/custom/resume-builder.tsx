@@ -176,22 +176,6 @@ export function ResumeBuilder({
     }
 
     const improveResume = async () => {
-        setFormData({
-            name: "John Doe",
-            email: "john.doe@example.com",
-            phone: "123-456-7890",
-            location: "Sample Location",
-            introduction: "Sample Introduction",
-            workExperience: [],
-            projects: [],
-            skills: [],
-            education: {
-                school: "Sample University",
-                degree: "B.S. Computer Science",
-                location: "Sample City",
-                duration: "2016-2020",
-            },
-        })
         const jobId = searchParams.get("job");
 
         const parsedData = await onImprove(JSON.stringify(formData), jobId ? Number(jobId) : undefined)

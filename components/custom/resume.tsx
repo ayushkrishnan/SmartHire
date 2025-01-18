@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     },
     skillsGrid: {
         flexDirection: 'row',
+        flexWrap: "wrap",
         gap: 10,
     },
 });
