@@ -37,6 +37,7 @@ export interface ResumeData {
     skills: string[];
     achievements: Achievement[],
     education: Education[],
+    languages: string[]
 }
 
 const styles = StyleSheet.create({
@@ -146,6 +147,16 @@ export const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => (
             <View style={styles.skillsGrid}>
                 {data.skills.map((skill, index) => (
                     <Text key={index}>{skill}</Text>
+                ))}
+            </View>
+
+            {
+                data.languages.length > 0 &&
+                <Text style={styles.sectionTitle}>LANGUAGES</Text>
+            }
+            <View style={styles.skillsGrid}>
+                {data.languages.map((lang, index) => (
+                    <Text key={index}>{lang}</Text>
                 ))}
             </View>
 

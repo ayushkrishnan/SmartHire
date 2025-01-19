@@ -69,6 +69,7 @@ interface ResumeData {
     skills: string[];
     achievements: Achievement[];
     education: Education[];
+    languages: string[]
 }
 
 export function ResumeBuilder({
@@ -107,6 +108,7 @@ export function ResumeBuilder({
         skills: [],
         achievements: [],
         education: [],
+        languages: []
     });
     const [score, setScore] = useState(1);
 
@@ -335,8 +337,17 @@ export function ResumeBuilder({
                         id="introduction"
                         value={formData.introduction}
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                            handleBasicChange('introduction', e.target.value)}
+                            handleBasicChange('skills', e.target.value)}
                         placeholder="I am a 3rd year cyber security student..."
+                    />
+
+                    <label htmlFor="languages">Languages</label>
+                    <Textarea
+                        id="languages"
+                        value={formData.languages.join(", ")}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                            handleBasicChange('languages', e.target.value.split(",").map(lang => lang.trim()))}
+                        placeholder="English"
                     />
                 </div>
 

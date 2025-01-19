@@ -36,7 +36,8 @@ const resumeSchema = z.object({
         degree: z.string().describe("Type and field of degree obtained"),
         location: z.string().describe("City and state/country of the institution"),
         duration: z.string().describe("Education period in format 'Year - Year'")
-    })).describe("Academic background and qualifications")
+    })).describe("Academic background and qualifications"),
+    languages: z.array(z.string()).describe("Languages spoken")
 });
 
 export async function extractResumeFields(resume: string) {
