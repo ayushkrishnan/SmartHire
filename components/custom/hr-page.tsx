@@ -139,7 +139,7 @@ export function HRPage({
                     </Dialog>
                     <Input placeholder="Search jobs..." className="max-w-72 rounded-full" onChange={(event) => {
                         setSearch(event.target.value.toLowerCase());
-                    }}/>
+                    }} />
                 </div>
                 <div className="flex flex-row flex-wrap gap-4">
                     {
@@ -183,9 +183,23 @@ export function HRPage({
                                     <Link href={`/hr/${job.id}`}>
                                         <Button className="rounded-full bg-blue-600 hover:bg-blue-500">View job</Button>
                                     </Link>
-                                    <Button variant="ghost" className="ml-auto w-fit rounded-full" onClick={() => handleDelete(job.id)}>
-                                        <Trash/>
-                                    </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="ghost" className="ml-auto w-fit rounded-full">
+                                                <Trash />
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Delete {job.name}</AlertDialogTitle>
+                                                <AlertDialogDescription>This action is irreversible</AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                                <AlertDialogAction className="rounded-full bg-red-600 hover:bg-red-500" onClick={() => handleDelete(job.id)}>Delete Job</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </div>
                             </div>
                         ))
