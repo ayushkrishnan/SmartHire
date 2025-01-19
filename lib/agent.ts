@@ -92,6 +92,7 @@ export async function generateResumeScore(resumeJson: string, jobJson: string){
         2. The scoring should not be limited to multiples of 10; ensure granularity and precision.  
         3. Account for key job-related skills, qualifications, and responsibilities mentioned in the job description JSON.
         4. Ensure the resume is written with professional language
+        5. If the resume matches closely with the requirements of the job description, consider giving it a score above 90
 
         Job Information:  
         ${jobJson}

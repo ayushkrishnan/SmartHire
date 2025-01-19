@@ -337,7 +337,7 @@ export function ResumeBuilder({
                         id="introduction"
                         value={formData.introduction}
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                            handleBasicChange('skills', e.target.value)}
+                            handleBasicChange('introduction', e.target.value)}
                         placeholder="I am a 3rd year cyber security student..."
                     />
 
