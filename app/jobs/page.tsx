@@ -3,9 +3,14 @@ import { auth } from "@/auth"
 import { getJobs, getJobApplications } from "@/lib/db/jobs";
 
 import { JobPage } from "@/components/custom/jobs-page";
+import { redirect } from "next/navigation";
 
 export default async function Jobs(){
     const session = await auth()
+
+    if(!session){
+        redirect("/");
+    }
     
     const jobs = await getJobs();
     const jobApplications = await getJobApplications();
