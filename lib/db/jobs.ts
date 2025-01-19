@@ -1,4 +1,4 @@
-import { eq, InferInsertModel } from "drizzle-orm"
+import { desc, eq, InferInsertModel } from "drizzle-orm"
 import db from "./index"
 import { jobs, resumes, users } from "./schema"
 
@@ -36,7 +36,7 @@ export async function getJobApplications(){
 }
 
 export async function getJobApplicationsForJob(jobId: number){
-    return await db.select().from(resumes).where(eq(resumes.jobId, jobId)).innerJoin(users, eq(resumes.userId, users.id));
+    return await db.select().from(resumes).where(eq(resumes.jobId, jobId)).innerJoin(users, eq(resumes.userId, users.id)).orderBy(desc(resumes.score));
 }
 
 export async function updateResumeStatus(resumeId: number, status: string){

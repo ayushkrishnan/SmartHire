@@ -3,25 +3,16 @@
 import { useState } from "react";
 import { Input } from "../ui/input";
 
-import {
-    AlertDialog,
-    AlertDialogTrigger,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogFooter
-} from "../ui/alert-dialog"
 import { Button } from "../ui/button";
 import Link from "next/link";
 
 export function JobPage({
+    userId,
     name,
     jobs,
     applications
 }: {
+    userId?: string,
     name?: string | null,
     jobs: {
         id: number,
@@ -37,6 +28,7 @@ export function JobPage({
         userId: string | null;
         score: number | null;
         jobId: number | null;
+        status: string | null
     }[]
 }) {
 
@@ -79,8 +71,14 @@ export function JobPage({
                                     </AlertDialogContent>
                                 </AlertDialog> */}
                                 {
-                                    applications.find((value) => value.jobId === job.id) ?
-                                        <p className="text-neutral-500 italic">Our HR team will contact you. Thank you for your application!</p> :
+                                    applications.find((value) => value.jobId === job.id && value.userId === userId) ?
+                                        <>
+                                        {
+                                            applications.find((value) => value.jobId === job.id && value.userId === userId)?.status === "pending" ?
+                                            <p className="text-neutral-500 italic">Our HR team will contact you. Thank you for your application!</p> :
+                                            <p className="text-neutral-500 italic font-bold">{applications.find((value) => value.jobId === job.id && value.userId === userId)?.status}</p>
+                                        }
+                                        </> :
                                         <Link href={`/resumebuilder?job=${job.id}`}>
                                             <Button className="rounded-full bg-blue-600 hover:bg-blue-500">Apply</Button>
                                         </Link>

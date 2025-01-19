@@ -49,7 +49,9 @@ export default async function Home() {
         <div className="h-full flex flex-col p-16 justify-center items-center gap-4">
           <h1 className="text-4xl font-bold">Let the jobs come to you</h1>
           <p className="max-w-96 text-center">Hire people/Be hired without fuss - Satisfaction guarunteed, and definitely!</p>
-          <Button className="rounded-full py-2 w-fit bg-blue-600 hover:bg-blue-500 font-bold">Get a job</Button>
+          <Link href="/jobs">
+            <Button className="rounded-full py-2 w-fit bg-blue-600 hover:bg-blue-500 font-bold">Get a job</Button>
+          </Link>
         </div>
       </section>
     </div>
