@@ -48,7 +48,7 @@ export async function extractResumeFields(resume: string) {
 
 export async function improveResume(resumeJson: string, jobJson: string){
     const system = `
-    You are an intelligent resume improvement agent. You will be given json representing a resume and json representing a job description. Your goal is to improve the resume based on the job information. If the job information is empty, make general improvements to the resume instead.
+    You are an intelligent resume improvement agent. You will be given json representing a resume and json representing a job description. Your goal is to improve the resume based on the job information. If the job information is empty, make general improvements to the resume instead. If the resume information is empty, generate lorem ipsum placeholder text.
 
     Guidelines for improvement:
     1. **Match Keywords**: Identify relevant skills, qualifications, and experience in the job description, and ensure these keywords are integrated into the resume. Use exact or closely related terms that appear in the job description.
@@ -72,4 +72,28 @@ export async function improveResume(resumeJson: string, jobJson: string){
     })
 
     return object
+}
+
+export async function generateResumeScore(resumeJson: string, jobJson: string){
+    const {object} = await generateObject({
+        model,
+        system: `
+        Task: Generate a compatibility score between a resume and the provided job description JSON. The score must fall within a range of 0 to 100, reflecting how well the resume matches the job requirements.  
+
+        Scoring Guidelines:  
+        1. Prioritize projects and past experiences — Give higher weight to these sections when scoring.  
+        2. The scoring should not be limited to multiples of 10; ensure granularity and precision.  
+        3. Account for key job-related skills, qualifications, and responsibilities mentioned in the job description JSON.
+        4. Ensure the resume is written with professional language
+
+        Job Information:  
+        ${jobJson}
+        `,
+        prompt: resumeJson,
+        schema: z.object({
+            score: z.number().describe("The score given to the resume.")
+        })
+    })
+
+    return object;
 }

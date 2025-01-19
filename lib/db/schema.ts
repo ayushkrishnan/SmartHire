@@ -6,6 +6,7 @@ import {
   primaryKey,
   integer,
   serial,
+  json,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
 
@@ -107,5 +108,10 @@ export const resumes = pgTable("resumes", {
   userId: text().references(() => users.id, {
     onDelete: "cascade"
   }),
-  url: text()
+  data: json(),
+  score: integer(),
+  jobId: integer().references(() => jobs.id, {
+    onDelete: "cascade"
+  }),
+  status: text().default("pending")
 })

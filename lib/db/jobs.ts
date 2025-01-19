@@ -1,6 +1,6 @@
 import { eq, InferInsertModel } from "drizzle-orm"
 import db from "./index"
-import { jobs } from "./schema"
+import { jobs, resumes, users } from "./schema"
 
 export async function getJobs(){
     return await db.select().from(jobs);
@@ -20,4 +20,27 @@ export async function updateJob(jobId: number, job: InferInsertModel<typeof jobs
 
 export async function deleteJob(jobId: number){
     return await db.delete(jobs).where(eq(jobs.id, jobId));
+}
+
+export async function addJobApplication(jobId: number, resumeJson: string, userId: string, score: number){
+    await db.insert(resumes).values({
+        jobId,
+        userId,
+        data: resumeJson,
+        score
+    })
+}
+
+export async function getJobApplications(){
+    return await db.select().from(resumes);
+}
+
+export async function getJobApplicationsForJob(jobId: number){
+    return await db.select().from(resumes).where(eq(resumes.jobId, jobId)).innerJoin(users, eq(resumes.userId, users.id));
+}
+
+export async function updateResumeStatus(resumeId: number, status: string){
+    await db.update(resumes).set({
+        status
+    }).where(eq(resumes.id, resumeId));
 }

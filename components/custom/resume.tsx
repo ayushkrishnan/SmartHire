@@ -21,7 +21,7 @@ interface Education {
     duration: string;
 }
 
-interface ResumeData {
+export interface ResumeData {
     name: string;
     email: string;
     phone: string;
@@ -96,7 +96,10 @@ export const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => (
                 {data.introduction && <Text>{data.introduction}</Text>}
             </View>
 
-            <Text style={styles.sectionTitle}>WORK EXPERIENCE</Text>
+            {
+                data.workExperience.length > 0 &&
+                <Text style={styles.sectionTitle}>WORK EXPERIENCE</Text>
+            }
             {data.workExperience.map((work, index) => (
                 <View key={index} style={{ marginBottom: 10 }}>
                     <View style={styles.workHeader}>
@@ -115,7 +118,10 @@ export const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => (
                 </View>
             ))}
 
-            <Text style={styles.sectionTitle}>PROJECTS</Text>
+            {
+                data.projects.length > 0 &&
+                <Text style={styles.sectionTitle}>PROJECTS</Text>
+            }
             {data.projects.map((project, index) => (
                 <View key={index} style={{ marginBottom: 10 }}>
                     <Text style={{ fontWeight: 'bold' }}>{project.name}</Text>
@@ -127,7 +133,10 @@ export const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => (
                 </View>
             ))}
 
-            <Text style={styles.sectionTitle}>SKILLS</Text>
+            {
+                data.skills.length > 0 &&
+                <Text style={styles.sectionTitle}>SKILLS</Text>
+            }
             <View style={styles.skillsGrid}>
                 {data.skills.map((skill, index) => (
                     <Text key={index}>{skill}</Text>

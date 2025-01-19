@@ -19,7 +19,8 @@ import Link from "next/link";
 
 export function JobPage({
     name,
-    jobs
+    jobs,
+    applications
 }: {
     name?: string | null,
     jobs: {
@@ -29,6 +30,13 @@ export function JobPage({
         skills: string | null,
         pay: string | null,
         company: string | null
+    }[],
+    applications: {
+        data: unknown;
+        id: number;
+        userId: string | null;
+        score: number | null;
+        jobId: number | null;
     }[]
 }) {
 
@@ -70,9 +78,13 @@ export function JobPage({
                                         </form>
                                     </AlertDialogContent>
                                 </AlertDialog> */}
-                                <Link href={`/resumebuilder?job=${job.id}`}>
-                                    <Button className="rounded-full bg-blue-600 hover:bg-blue-500">Apply</Button>
-                                </Link>
+                                {
+                                    applications.find((value) => value.jobId === job.id) ?
+                                        <p className="text-neutral-500 italic">Our HR team will contact you. Thank you for your application!</p> :
+                                        <Link href={`/resumebuilder?job=${job.id}`}>
+                                            <Button className="rounded-full bg-blue-600 hover:bg-blue-500">Apply</Button>
+                                        </Link>
+                                }
                             </div>
                         </div>
                     ))

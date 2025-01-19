@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { ShinyButton } from "../ui/shiny-button";
 import { useSearchParams } from "next/navigation";
+import NumberTicker from "../ui/number-ticker";
 
 import dynamic from "next/dynamic";
 
@@ -66,11 +67,28 @@ interface ResumeData {
 }
 
 export function ResumeBuilder({
+    userId,
+    job,
     onUpload,
-    onImprove
+    onImprove,
+    onScore,
+    onApply
 }: {
+    userId?: string,
+    job?: {
+        id: number;
+        name: string | null;
+        description: string | null;
+        skills: string | null;
+        pay: string | null;
+        company: string | null;
+    },
     onUpload: (resumeFile: string) => Promise<ResumeData>,
     onImprove: (resumeJson: string, jobId?: number) => Promise<ResumeData>
+    onScore: (resumeJson: string, jobId: number) => Promise<{
+        score: number
+    }>,
+    onApply: (pdfJson: string, jobId: number, userId: string, score: number) => Promise<void>
 }) {
     const searchParams = useSearchParams();
     const [formData, setFormData] = useState<ResumeData>({
@@ -89,6 +107,7 @@ export function ResumeBuilder({
             duration: "2016-2020",
         },
     });
+    const [score, setScore] = useState(1);
 
     const [isClient, setIsClient] = useState(false);
     const [uploadedResume, setUploadedResume] = useState<File>()
@@ -182,6 +201,20 @@ export function ResumeBuilder({
         setFormData(parsedData);
     }
 
+    const refreshScore = async () => {
+        const jobId = searchParams.get("job");
+        const {score} = await onScore(JSON.stringify(formData), Number(jobId));
+
+        console.log(score);
+
+        setScore(score);
+    }
+
+    const applyJob = async () => {
+        const jobId = searchParams.get("job");
+        await onApply(JSON.stringify(formData), Number(jobId), userId!, Math.floor(score));
+    }
+
     return (
         <div className="flex flex-row p-6 h-full gap-3 overflow-hidden">
             <div className="flex flex-col gap-4 w-1/2 h-full overflow-auto">
@@ -208,6 +241,30 @@ export function ResumeBuilder({
                                 </form>
                             </AlertDialogContent>
                         </AlertDialog>
+                        {
+                            job &&
+                            <AlertDialog onOpenChange={(open) => {
+                                if(open) refreshScore();
+                            }}>
+                                <AlertDialogTrigger asChild>
+                                    <Button className="rounded-full bg-blue-600 hover:bg-blue-500">Apply for {job.name}</Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>{job.name}</AlertDialogTitle>
+                                        <AlertDialogDescription>This is how well your resume matches</AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <div className="flex flex-row items-center justify-center">
+                                        <NumberTicker value={score} className="text-4xl font-bold text-blue-600"/>
+                                        <p className="text-4xl font-bold text-blue-600">/100</p>
+                                    </div>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                        <AlertDialogAction className="rounded-full" onClick={applyJob}>Apply</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        }
                     </div>
                     <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
                     <label htmlFor="name">Name</label>
