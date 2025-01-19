@@ -249,7 +249,7 @@ export function ResumeBuilder({
     }
 
     return (
-        <div className="flex flex-row p-6 h-screen gap-3 overflow-hidden">
+        <div className="flex flex-row p-6 h-full gap-3">
             <div className="flex flex-col gap-4 w-1/2 h-full overflow-auto">
                 {/* Basic Information */}
                 <div className="flex flex-col gap-2 rounded-md border border-neutral-300 p-10">

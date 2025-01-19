@@ -27,7 +27,7 @@ export default async function Jobs({searchParams} : {searchParams?: { [key: stri
     }
         
     return (
-        <div className="flex flex-col w-full h-screen bg-white">
+        <div className="flex flex-col w-full h-screen bg-white overflow-auto">
             <nav className="flex flex-row w-full p-6 justify-between items-center">
                 <h2 className="text-xl font-bold">SmartHire</h2>
                 {
