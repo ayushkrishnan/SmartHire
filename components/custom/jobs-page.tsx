@@ -43,10 +43,10 @@ export function JobPage({
             <div className="flex flex-row gap-3 overflow-auto">
                 {
                     jobs.filter(job => job.name?.toLowerCase().includes(search)).map((job) => (
-                        <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-72 max-h-72 border border-neutral-300 aspect-square">
+                        <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 max-h-96 border border-neutral-300 aspect-square">
                             <h1 className="text-3xl font-bold text-blue-600">{job.name}</h1>
                             <p className="text-neutral-600">{job.company}</p>
-                            <p className="overflow-auto">
+                            <p className="overflow-auto text-justify">
                                 {job.description}
                             </p>
                             <p>{job.pay}</p>
