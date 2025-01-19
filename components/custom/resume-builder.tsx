@@ -13,11 +13,11 @@ import NumberTicker from "../ui/number-ticker";
 import dynamic from "next/dynamic";
 
 const PDFViewer = dynamic(
-  () => import("./pdf-viewer"),
-  {
-    ssr: false,
-    loading: () => <p>Loading...</p>,
-  },
+    () => import("./pdf-viewer"),
+    {
+        ssr: false,
+        loading: () => <p>Loading...</p>,
+    },
 );
 
 
@@ -33,6 +33,10 @@ import {
     AlertDialogFooter
 } from "../ui/alert-dialog"
 
+interface Achievement {
+    title: string;
+    details: string[];
+}
 
 interface WorkExperience {
     company: string;
@@ -63,7 +67,8 @@ interface ResumeData {
     workExperience: WorkExperience[];
     projects: Project[];
     skills: string[];
-    education: Education;
+    achievements: Achievement[];
+    education: Education[];
 }
 
 export function ResumeBuilder({
@@ -100,12 +105,8 @@ export function ResumeBuilder({
         workExperience: [],
         projects: [],
         skills: [],
-        education: {
-            school: "Sample University",
-            degree: "B.S. Computer Science",
-            location: "Sample City",
-            duration: "2016-2020",
-        },
+        achievements: [],
+        education: [],
     });
     const [score, setScore] = useState(1);
 
@@ -141,16 +142,6 @@ export function ResumeBuilder({
         }));
     };
 
-    const handleEducationChange = (field: keyof Education, value: string): void => {
-        setFormData(prev => ({
-            ...prev,
-            education: {
-                ...prev.education,
-                [field]: value
-            }
-        }));
-    };
-
     const addWorkExperience = (): void => {
         setFormData(prev => ({
             ...prev,
@@ -174,6 +165,15 @@ export function ResumeBuilder({
         }));
     };
 
+    const handleEducationChange = (index: number, field: keyof Education, value: string): void => {
+        setFormData(prev => ({
+            ...prev,
+            education: prev.education.map((edu, i) =>
+                i === index ? { ...edu, [field]: value } : edu
+            )
+        }));
+    };
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -194,6 +194,37 @@ export function ResumeBuilder({
         setFormData(parsedData);
     }
 
+    const handleAchievementChange = (index: number, field: keyof Achievement, value: string | string[]): void => {
+        setFormData(prev => ({
+            ...prev,
+            achievements: prev.achievements.map((achievement, i) =>
+                i === index ? { ...achievement, [field]: value } : achievement
+            )
+        }));
+    };
+
+    const addAchievement = (): void => {
+        setFormData(prev => ({
+            ...prev,
+            achievements: [...prev.achievements, {
+                title: "",
+                details: [""]
+            }]
+        }));
+    };
+
+    const addEducation = (): void => {
+        setFormData(prev => ({
+            ...prev,
+            education: [...prev.education, {
+                school: "",
+                degree: "",
+                location: "",
+                duration: ""
+            }]
+        }));
+    };
+
     const improveResume = async () => {
         const jobId = searchParams.get("job");
 
@@ -203,7 +234,7 @@ export function ResumeBuilder({
 
     const refreshScore = async () => {
         const jobId = searchParams.get("job");
-        const {score} = await onScore(JSON.stringify(formData), Number(jobId));
+        const { score } = await onScore(JSON.stringify(formData), Number(jobId));
 
         console.log(score);
 
@@ -244,7 +275,7 @@ export function ResumeBuilder({
                         {
                             job &&
                             <AlertDialog onOpenChange={(open) => {
-                                if(open) refreshScore();
+                                if (open) refreshScore();
                             }}>
                                 <AlertDialogTrigger asChild>
                                     <Button className="rounded-full bg-blue-600 hover:bg-blue-500">Apply for {job.name}</Button>
@@ -255,7 +286,7 @@ export function ResumeBuilder({
                                         <AlertDialogDescription>This is how well your resume matches</AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <div className="flex flex-row items-center justify-center">
-                                        <NumberTicker value={score} className="text-4xl font-bold text-blue-600"/>
+                                        <NumberTicker value={score} className="text-4xl font-bold text-blue-600" />
                                         <p className="text-4xl font-bold text-blue-600">/100</p>
                                     </div>
                                     <AlertDialogFooter>
@@ -398,38 +429,77 @@ export function ResumeBuilder({
                     />
                 </div>
 
+                <div className="flex flex-col gap-2 rounded-md border border-neutral-300 p-10">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold">Achievements</h2>
+                        <Button onClick={addAchievement} variant="outline" size="sm">
+                            <Plus className="w-4 h-4 mr-2" /> Add Achievement
+                        </Button>
+                    </div>
+
+                    {formData.achievements.map((achievement, index) => (
+                        <div key={index} className="border rounded-md p-4 mb-4">
+                            <div className="grid gap-2">
+                                <Input
+                                    placeholder="Achievement Title"
+                                    value={achievement.title}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                        handleAchievementChange(index, 'title', e.target.value)}
+                                />
+                                <Textarea
+                                    placeholder="Details (one per line)"
+                                    value={achievement.details.join('\n')}
+                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                                        handleAchievementChange(index, 'details', e.target.value.split('\n'))}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 {/* Education */}
                 <div className="flex flex-col gap-2 rounded-md border border-neutral-300 p-10">
-                    <h2 className="text-xl font-semibold mb-4">Education</h2>
-                    <Input
-                        placeholder="School Name"
-                        value={formData.education.school}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            handleEducationChange('school', e.target.value)}
-                    />
-                    <Input
-                        placeholder="Degree"
-                        value={formData.education.degree}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            handleEducationChange('degree', e.target.value)}
-                    />
-                    <div className="grid grid-cols-2 gap-2">
-                        <Input
-                            placeholder="Location"
-                            value={formData.education.location}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                handleEducationChange('location', e.target.value)}
-                        />
-                        <Input
-                            placeholder="Duration"
-                            value={formData.education.duration}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                handleEducationChange('duration', e.target.value)}
-                        />
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold">Education</h2>
+                        <Button onClick={addEducation} variant="outline" size="sm">
+                            <Plus className="w-4 h-4 mr-2" /> Add Education
+                        </Button>
                     </div>
+
+                    {formData.education.map((edu, index) => (
+                        <div key={index} className="border rounded-md p-4 mb-4">
+                            <div className="grid gap-2">
+                                <Input
+                                    placeholder="School Name"
+                                    value={edu.school}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                        handleEducationChange(index, 'school', e.target.value)}
+                                />
+                                <Input
+                                    placeholder="Degree"
+                                    value={edu.degree}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                        handleEducationChange(index, 'degree', e.target.value)}
+                                />
+                                <div className="grid grid-cols-2 gap-2">
+                                    <Input
+                                        placeholder="Location"
+                                        value={edu.location}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            handleEducationChange(index, 'location', e.target.value)}
+                                    />
+                                    <Input
+                                        placeholder="Duration"
+                                        value={edu.duration}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            handleEducationChange(index, 'duration', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
-
             <div className="flex h-full w-1/2">
                 {
                     isClient &&

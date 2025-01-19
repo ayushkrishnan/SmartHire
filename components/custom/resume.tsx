@@ -1,6 +1,11 @@
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
+interface Achievement {
+    title: string;
+    details: string[];
+}
+
 interface WorkExperience {
     company: string;
     position: string;
@@ -30,7 +35,8 @@ export interface ResumeData {
     workExperience: WorkExperience[];
     projects: Project[];
     skills: string[];
-    education: Education;
+    achievements: Achievement[],
+    education: Education[],
 }
 
 const styles = StyleSheet.create({
@@ -143,17 +149,37 @@ export const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => (
                 ))}
             </View>
 
-            <Text style={styles.sectionTitle}>EDUCATION</Text>
-            <View>
-                <View style={styles.workHeader}>
-                    <Text>{data.education.school}</Text>
-                    <Text>{data.education.duration}</Text>
+            {
+                data.achievements.length > 0 &&
+                <Text style={styles.sectionTitle}>ACHIEVEMENTS</Text>
+            }
+            {data.achievements.map((achievement, index) => (
+                <View key={index} style={{ marginBottom: 10 }}>
+                    <Text style={{ fontWeight: 'bold' }}>{achievement.title}</Text>
+                    {achievement.details.map((detail, i) => (
+                        <View key={i} style={styles.bullet}>
+                            <Text>• {detail}</Text>
+                        </View>
+                    ))}
                 </View>
-                <View style={styles.workHeader}>
-                    <Text style={styles.position}>{data.education.degree}</Text>
-                    <Text>{data.education.location}</Text>
+            ))}
+
+            {
+                data.education.length > 0 &&
+                <Text style={styles.sectionTitle}>EDUCATION</Text>
+            }
+            {data.education.map((edu, index) => (
+                <View key={index} style={{ marginBottom: 10 }}>
+                    <View style={styles.workHeader}>
+                        <Text>{edu.school}</Text>
+                        <Text>{edu.duration}</Text>
+                    </View>
+                    <View style={styles.workHeader}>
+                        <Text style={styles.position}>{edu.degree}</Text>
+                        <Text>{edu.location}</Text>
+                    </View>
                 </View>
-            </View>
+            ))}
         </Page>
     </Document>
 );

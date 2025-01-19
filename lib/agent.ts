@@ -25,20 +25,24 @@ const resumeSchema = z.object({
         name: z.string().describe("Title of the project"),
         details: z.array(z.string().describe("Bullet points describing project features, technologies, and achievements"))
     })).describe("Significant technical projects or implementations"),
+    achievements: z.array(z.object({
+        title: z.string().describe("Title or name of the achievement"),
+        details: z.array(z.string().describe("Bullet points describing the achievement and its impact"))
+    })).describe("Notable accomplishments, awards, and recognitions"),
     skills: z.array(z.string().describe("Technical skills, frameworks, languages, and tools"))
         .describe("List of technical competencies and skills"),
-    education: z.object({
+    education: z.array(z.object({
         school: z.string().describe("Name of the educational institution"),
         degree: z.string().describe("Type and field of degree obtained"),
         location: z.string().describe("City and state/country of the institution"),
         duration: z.string().describe("Education period in format 'Year - Year'")
-    }).describe("Academic background and qualifications")
+    })).describe("Academic background and qualifications")
 });
 
 export async function extractResumeFields(resume: string) {
     const { object } = await generateObject({
         model,
-        system: "Extract the text from the given resume text into the given schema. Preserve as much of the exact words as possible. Do not change anything about the text, only extract it and put it into the given schema.",
+        system: "Extract the text from the given resume text into the given schema. Preserve as much of the exact words as possible. Do not change anything about the text, only extract it and put it into the given schema. If there are any certifications, put it under achievements",
         schema: resumeSchema,
         prompt: resume
     })
@@ -59,6 +63,8 @@ export async function improveResume(resumeJson: string, jobJson: string){
     6. **Personalize Summary/Objective**: Modify the resume summary or objective to reflect the goals or qualities the employer is looking for. Be specific about how the candidate's background matches the job role.
     7. **Reformat Sections for ATS Compatibility**: Avoid using graphics, images, or unusual fonts. Use standard section headings like "Work Experience," "Education," "Skills," and "Certifications" to improve ATS compatibility.
     8. **Ensure Accuracy**: Remove any irrelevant information that doesn't support the desired role or is redundant.
+
+    <IMPORTANT>NEVER ADD INFORMATION THAT WASN'T ALREADY THERE. For example. If the work experience section is empty, leave it empty instead of adding information.</IMPORTANT>
 
     Job Information:
     ${jobJson}
