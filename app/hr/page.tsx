@@ -6,6 +6,8 @@ import { getJobs } from "@/lib/db/jobs"
 import { createJob, editJob, removeJob } from "./actions"
 import { redirect } from "next/navigation"
 
+import BlurFade from "@/components/ui/blur-fade"
+
 export default async function HRDashboard() {
     const session = await auth()
 
@@ -23,7 +25,9 @@ export default async function HRDashboard() {
                 <h2 className="text-xl font-bold">SmartHire</h2>
                 <SignOut />
             </nav>
-            <HRPage name={session?.user.name!} jobs={jobs} onNewJob={createJob} onEditJob={editJob} onDeleteJob={removeJob} />
+            <BlurFade className="h-full">
+                <HRPage name={session?.user.name!} jobs={jobs} onNewJob={createJob} onEditJob={editJob} onDeleteJob={removeJob} />
+            </BlurFade>
         </div>
     )
 }

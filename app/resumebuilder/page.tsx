@@ -6,6 +6,8 @@ import { ResumeBuilder } from "@/components/custom/resume-builder"
 import { uploadResume, improveResume, scoreResume, applyJob } from "./actions"
 import { getJob } from "@/lib/db/jobs";
 import { redirect } from "next/navigation";
+import BlurFade from "@/components/ui/blur-fade";
+import { SignIn } from "@/components/custom/sign-in";
 
 export default async function Jobs({searchParams} : {searchParams?: { [key: string]: string | string[] | undefined }}){
     const session = await auth();
@@ -29,10 +31,12 @@ export default async function Jobs({searchParams} : {searchParams?: { [key: stri
             <nav className="flex flex-row w-full p-6 justify-between items-center">
                 <h2 className="text-xl font-bold">SmartHire</h2>
                 {
-                    session && <SignOut/>
+                    session ? <SignOut/> : <SignIn/>
                 }
             </nav>
-            <ResumeBuilder onUpload={uploadResume} onImprove={improveResume} onScore={scoreResume} onApply={applyJob} job={job} userId={session?.user.id}/>
+            <BlurFade>
+                <ResumeBuilder onUpload={uploadResume} onImprove={improveResume} onScore={scoreResume} onApply={applyJob} job={job} userId={session?.user.id}/>
+            </BlurFade>
         </div>
     )
 }

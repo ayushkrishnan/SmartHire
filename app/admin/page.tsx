@@ -7,6 +7,7 @@ import { addNewUser, editUser, removeUser } from "./actions"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import BlurFade from "@/components/ui/blur-fade"
 
 export default async function Admin(){
     const session = await auth()
@@ -32,7 +33,9 @@ export default async function Admin(){
                     <SignOut/>
                 </div>
             </nav>
-            <AdminPage name={session?.user.name} users={users} onNewUser={addNewUser} onEditUser={editUser} onDeleteUser={removeUser}/>
+            <BlurFade>
+                <AdminPage name={session?.user.name} users={users} onNewUser={addNewUser} onEditUser={editUser} onDeleteUser={removeUser}/>
+            </BlurFade>
         </div>
     )
 }

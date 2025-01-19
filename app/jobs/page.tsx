@@ -8,6 +8,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+import BlurFade from "@/components/ui/blur-fade";
+
 export default async function Jobs(){
     const session = await auth()
 
@@ -29,7 +31,9 @@ export default async function Jobs(){
                     <SignOut/>
                 </div>
             </nav>
-            <JobPage name={session?.user.name} jobs={jobs} applications={jobApplications} userId={session.user.id}/>
+            <BlurFade>
+                <JobPage name={session?.user.name} jobs={jobs} applications={jobApplications} userId={session.user.id}/>
+            </BlurFade>
         </div>
     )
 }

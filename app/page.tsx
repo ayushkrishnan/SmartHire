@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/auth";
 
+import BlurFade from "@/components/ui/blur-fade";
+
 export default async function Home() {
   const session = await auth();
   let dashboard = "/hr";
@@ -46,13 +48,15 @@ export default async function Home() {
       </nav>
       <Image src="/tokyo.webp" width={1920} height={1080} alt="job" className="absolute h-screen w-screen object-cover rounded-md -z-10 bg-black opacity-70"/>
       <section className="flex flex-row items-center justify-center w-full h-screen p-6 text-white">
-        <div className="h-full flex flex-col p-16 justify-center items-center gap-4">
-          <h1 className="text-4xl font-bold">Let the jobs come to you</h1>
-          <p className="max-w-96 text-center">Hire people/Be hired without fuss - Satisfaction guarunteed, and definitely!</p>
-          <Link href="/jobs">
-            <Button className="rounded-full py-2 w-fit bg-blue-600 hover:bg-blue-500 font-bold">Get a job</Button>
-          </Link>
-        </div>
+        <BlurFade>
+          <div className="h-full flex flex-col p-16 justify-center items-center gap-4">
+            <h1 className="text-4xl font-bold">Let the jobs come to you</h1>
+            <p className="max-w-96 text-center">Hire people/Be hired without fuss - Satisfaction guarunteed, and definitely!</p>
+            <Link href="/jobs">
+              <Button className="rounded-full py-2 w-fit bg-blue-600 hover:bg-blue-500 font-bold">Get a job</Button>
+            </Link>
+          </div>
+        </BlurFade>
       </section>
     </div>
   );
