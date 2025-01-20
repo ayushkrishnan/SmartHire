@@ -8,7 +8,8 @@ export async function createJob(formData: FormData) {
         description: formData.get('description') as string,
         skills: formData.get('skills') as string,
         pay: formData.get('pay') as string,
-        company: formData.get('company') as string
+        company: formData.get('company') as string,
+        location: formData.get('location') as string
     });
 }
 
@@ -18,7 +19,8 @@ export async function editJob(formData: FormData, jobId: number){
         description: formData.get('description') as string,
         skills: formData.get('skills') as string,
         pay: formData.get('pay') as string,
-        company: formData.get('company') as string
+        company: formData.get('company') as string,
+        location: formData.get('location') as string
     });
     return await getJobs();
 }

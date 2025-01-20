@@ -6,6 +6,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
 
+import { Coins, MapPin } from "lucide-react";
+
 export function JobPage({
     userId,
     name,
@@ -20,7 +22,8 @@ export function JobPage({
         description: string | null,
         skills: string | null,
         pay: string | null,
-        company: string | null
+        company: string | null,
+        location: string | null
     }[],
     applications: {
         data: unknown;
@@ -35,12 +38,12 @@ export function JobPage({
     const [search, setSearch] = useState("");
 
     return (
-        <div className="flex flex-col w-full h-screen p-6 gap-3">
+        <div className="flex flex-col w-full h-full p-6 gap-3">
             <h1 className="text-3xl font-bold">Let's find a job, <br />{name ?? "Applicant"}!</h1>
             <Input placeholder="search" className="rounded-full w-60" onChange={(event) => {
                 setSearch(event.target.value.toLowerCase());
             }} />
-            <div className="flex flex-row gap-3 overflow-auto">
+            <div className="flex flex-row flex-wrap gap-3">
                 {
                     jobs.filter(job => job.name?.toLowerCase().includes(search)).map((job) => (
                         <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 max-h-96 border border-neutral-300 aspect-square">
@@ -49,8 +52,15 @@ export function JobPage({
                             <p className="overflow-auto text-justify">
                                 {job.description}
                             </p>
-                            <p>{job.pay}</p>
-                            <div className="flex flex-row gap-2 mt-auto">
+                            <p className="flex flex-row gap-2 items-center mt-auto">
+                                <Coins size={16} />
+                                {job.pay}
+                            </p>
+                            <p className="flex flex-row gap-2 items-center">
+                                <MapPin size={16} />
+                                {job.location ?? "Not given"}
+                            </p>
+                            <div className="flex flex-row gap-2">
                                 {/* <AlertDialog>
                                     <AlertDialogTrigger asChild>
                                         <Button className="rounded-full">Upload resume</Button>

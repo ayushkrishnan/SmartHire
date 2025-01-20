@@ -21,7 +21,7 @@ export default async function Jobs(){
     const jobApplications = await getJobApplications();
     
     return (
-        <div className="flex flex-col w-full h-screen bg-white">
+        <div className="flex flex-col w-full min-h-screen bg-white">
             <nav className="flex flex-row w-full p-6 justify-between items-center">
                 <h2 className="text-xl font-bold">SmartHire</h2>
                 <div className="flex flex-row gap-2 items-center">
@@ -32,7 +32,8 @@ export default async function Jobs(){
                 </div>
             </nav>
             <BlurFade>
-                <JobPage name={session?.user.name} jobs={jobs} applications={jobApplications} userId={session.user.id}/>
+                {/* <JobPage name={session?.user.name} jobs={jobs} applications={jobApplications} userId={session.user.id}/> */}
+                <p className="p-6 w-full text-center text-3xl font-bold">Under construction</p>
             </BlurFade>
         </div>
     )

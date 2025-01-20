@@ -28,6 +28,8 @@ import { Button } from "../ui/button";
 import { FormEvent } from "react";
 import Link from "next/link";
 
+import { MapPin } from "lucide-react";
+
 import { Trash } from "lucide-react";
 
 export function HRPage({
@@ -44,7 +46,8 @@ export function HRPage({
         description: string | null,
         skills: string | null,
         pay: string | null,
-        company: string | null
+        company: string | null,
+        location: string | null
     }[],
     onNewJob: (formData: FormData) => Promise<{
         id: number,
@@ -52,7 +55,8 @@ export function HRPage({
         description: string | null,
         skills: string | null,
         pay: string | null,
-        company: string | null
+        company: string | null,
+        location: string | null
     }[]>,
     onEditJob: (formData: FormData, jobId: number) => Promise<{
         id: number,
@@ -60,7 +64,8 @@ export function HRPage({
         description: string | null,
         skills: string | null,
         pay: string | null,
-        company: string | null
+        company: string | null,
+        location: string | null
     }[]>,
     onDeleteJob: (jobId: number) => Promise<void>
 }) {
@@ -133,6 +138,9 @@ export function HRPage({
                                 <Label>Company</Label>
                                 <Input id="company" name="company" placeholder="Enter company name" required />
 
+                                <Label>Location</Label>
+                                <Input id="location" name="location" placeholder="Enter job location" required />
+
                                 <Button type="submit" className="rounded-full w-fit mt-4">Submit</Button>
                             </form>
                         </DialogContent>
@@ -150,7 +158,11 @@ export function HRPage({
                                 <p className="overflow-auto text-justify">
                                     {job.description}
                                 </p>
-                                <div className="mt-auto flex flex-row gap-2">
+                                <p className="flex flex-row gap-2 items-center mt-auto">
+                                    <MapPin size={16}/>
+                                    {job.location}
+                                </p>
+                                <div className="flex flex-row gap-2">
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
                                             <Button className="rounded-full w-fit">Edit Job</Button>
@@ -171,6 +183,8 @@ export function HRPage({
                                                 <Input id="pay" name="pay" placeholder="Enter pay range" defaultValue={job.pay!} required />
                                                 <Label>Company</Label>
                                                 <Input id="company" name="company" placeholder="Enter company name" defaultValue={job.company!} required />
+                                                <Label>Location</Label>
+                                                <Input id="location" name="location" placeholder="Enter job location" defaultValue={job.location!} required />
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
                                                     <AlertDialogAction asChild>

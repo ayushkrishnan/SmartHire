@@ -23,7 +23,7 @@ export default async function HRJobPage({ params }: { params: Promise<{ id: numb
     }
 
     return (
-        <div className="flex flex-col w-full h-screen bg-white p-6 gap-4">
+        <div className="flex flex-col w-full min-h-screen bg-white p-6 gap-4">
             <nav className="flex flex-row gap-3 items-center">
                 <Link href="/hr">
                     <ArrowLeft />
@@ -37,8 +37,28 @@ export default async function HRJobPage({ params }: { params: Promise<{ id: numb
                         {job.description}
                     </p>
                     <div className="flex flex-col gap-2 mt-3">
-                        <NumberTicker value={applications.length} className="text-3xl font-bold text-blue-600" />
+                        {
+                            applications.length > 0 ? <NumberTicker value={applications.length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
+                        }
                         <p>Job applicants</p>
+                    </div>
+                    <div className="flex flex-col gap-2 mt-3">
+                        {
+                            applications.filter(application => application.resumes.status === "accepted").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "accepted").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
+                        }
+                        <p>Accepted applicants</p>
+                    </div>
+                    <div className="flex flex-col gap-2 mt-3">
+                        {
+                            applications.filter(application => application.resumes.status === "rejected").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "rejected").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
+                        }
+                        <p>Rejected applicants</p>
+                    </div>
+                    <div className="flex flex-col gap-2 mt-3">
+                        {
+                            applications.filter(application => application.resumes.status === "pending").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "pending").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
+                        }
+                        <p>Pending applicants</p>
                     </div>
                 </div>
                 <div className="flex flex-col w-full">

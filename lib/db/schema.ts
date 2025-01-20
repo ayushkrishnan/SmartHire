@@ -100,7 +100,8 @@ export const jobs = pgTable("jobs", {
   description: text(),
   skills: text(),
   pay: text(),
-  company: text()
+  company: text(),
+  location: text()
 })
 
 export const resumes = pgTable("resumes", {

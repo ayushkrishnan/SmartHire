@@ -20,7 +20,7 @@ export default async function Admin(){
     }
 
     return (
-        <div className="flex flex-col w-full h-screen bg-white">
+        <div className="flex flex-col w-full min-h-screen bg-white">
             <nav className="flex flex-row w-full p-6 justify-between items-center">
                 <h2 className="text-xl font-bold">SmartHire</h2>
                 <div className="flex flex-row items-center gap-2">
