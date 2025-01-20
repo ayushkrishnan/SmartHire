@@ -160,7 +160,7 @@ export function HRPage({
                                 </p>
                                 <p className="flex flex-row gap-2 items-center mt-auto">
                                     <MapPin size={16}/>
-                                    {job.location}
+                                    {job.location ?? "Not given"}
                                 </p>
                                 <div className="flex flex-row gap-2">
                                     <AlertDialog>
