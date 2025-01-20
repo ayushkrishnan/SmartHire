@@ -25,7 +25,7 @@ export default async function HRDashboard() {
                 <h2 className="text-xl font-bold">SmartHire</h2>
                 <SignOut />
             </nav>
-            <BlurFade className="h-full">
+            <BlurFade className="h-full flex overflow-hidden">
                 <HRPage name={session?.user.name!} jobs={jobs} onNewJob={createJob} onEditJob={editJob} onDeleteJob={removeJob} />
             </BlurFade>
         </div>

@@ -27,14 +27,14 @@ export default async function Jobs({searchParams} : {searchParams?: { [key: stri
     }
         
     return (
-        <div className="flex flex-col w-full h-screen bg-white overflow-auto">
+        <div className="flex flex-col w-screen h-screen bg-white overflow-hidden">
             <nav className="flex flex-row w-full p-6 justify-between items-center">
                 <h2 className="text-xl font-bold">SmartHire</h2>
                 {
                     session ? <SignOut/> : <SignIn/>
                 }
             </nav>
-            <BlurFade>
+            <BlurFade className="h-full flex w-full overflow-hidden">
                 <ResumeBuilder onUpload={uploadResume} onImprove={improveResume} onScore={scoreResume} onApply={applyJob} job={job} userId={session?.user.id}/>
             </BlurFade>
         </div>
