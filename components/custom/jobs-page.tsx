@@ -52,7 +52,7 @@ export function JobPage({
                             <p className="overflow-auto text-justify">
                                 {job.description}
                             </p>
-                            <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 mt-auto h-10 items-center">
+                            <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 mt-auto py-2 h-fit items-center">
                                 {
                                     job.skills?.split(",").map((skill, index) => (
                                         <p key={skill} className="text-nowrap px-5 py-1 bg-neutral-100 rounded-full h-fit">{skill}</p>
