@@ -6,6 +6,8 @@ import { getJob, getJobApplicationsForJob } from "@/lib/db/jobs"
 import { HRJobPage as JobPage } from "@/components/custom/hr-job-page"
 import { updateStatus } from "./actions"
 
+import BlurFade from "@/components/ui/blur-fade"
+
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 
@@ -30,41 +32,43 @@ export default async function HRJobPage({ params }: { params: Promise<{ id: numb
                 </Link>
                 <h2 className="text-2xl font-bold">View job applicants</h2>
             </nav>
-            <div className="flex flex-row gap-3 h-full">
-                <div className="flex flex-col gap-2 w-fit h-full px-6 border-r border-neutral-300 max-w-96">
-                    <h1 className="text-xl font-bold text-blue-600">{job.name}</h1>
-                    <p>
-                        {job.description}
-                    </p>
-                    <div className="flex flex-col gap-2 mt-3">
-                        {
-                            applications.length > 0 ? <NumberTicker value={applications.length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
-                        }
-                        <p>Job applicants</p>
+            <BlurFade>
+                <div className="flex flex-row gap-3 h-full">
+                    <div className="flex flex-col gap-2 w-fit h-full px-6 border-r border-neutral-300 max-w-96">
+                        <h1 className="text-xl font-bold text-blue-600">{job.name}</h1>
+                        <p>
+                            {job.description}
+                        </p>
+                        <div className="flex flex-col gap-2 mt-3">
+                            {
+                                applications.length > 0 ? <NumberTicker value={applications.length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
+                            }
+                            <p>Job applicants</p>
+                        </div>
+                        <div className="flex flex-col gap-2 mt-3">
+                            {
+                                applications.filter(application => application.resumes.status === "accepted").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "accepted").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
+                            }
+                            <p>Accepted applicants</p>
+                        </div>
+                        <div className="flex flex-col gap-2 mt-3">
+                            {
+                                applications.filter(application => application.resumes.status === "rejected").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "rejected").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
+                            }
+                            <p>Rejected applicants</p>
+                        </div>
+                        <div className="flex flex-col gap-2 mt-3">
+                            {
+                                applications.filter(application => application.resumes.status === "pending").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "pending").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
+                            }
+                            <p>Pending applicants</p>
+                        </div>
                     </div>
-                    <div className="flex flex-col gap-2 mt-3">
-                        {
-                            applications.filter(application => application.resumes.status === "accepted").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "accepted").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
-                        }
-                        <p>Accepted applicants</p>
-                    </div>
-                    <div className="flex flex-col gap-2 mt-3">
-                        {
-                            applications.filter(application => application.resumes.status === "rejected").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "rejected").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
-                        }
-                        <p>Rejected applicants</p>
-                    </div>
-                    <div className="flex flex-col gap-2 mt-3">
-                        {
-                            applications.filter(application => application.resumes.status === "pending").length > 0 ? <NumberTicker value={applications.filter(application => application.resumes.status === "pending").length} className="text-3xl font-bold text-blue-600" /> : <h1 className="text-3xl font-bold text-blue-600">0</h1>
-                        }
-                        <p>Pending applicants</p>
+                    <div className="flex flex-col w-full">
+                        <JobPage applications={applications} onStatus={updateStatus} />
                     </div>
                 </div>
-                <div className="flex flex-col w-full">
-                    <JobPage applications={applications} onStatus={updateStatus} />
-                </div>
-            </div>
+            </BlurFade>
         </div>
     )
 }
