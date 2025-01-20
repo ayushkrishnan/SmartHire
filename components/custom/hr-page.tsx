@@ -28,7 +28,7 @@ import { Button } from "../ui/button";
 import { FormEvent } from "react";
 import Link from "next/link";
 
-import { MapPin } from "lucide-react";
+import { Coins, MapPin } from "lucide-react";
 
 import { Trash } from "lucide-react";
 
@@ -152,14 +152,25 @@ export function HRPage({
                 <div className="flex flex-row flex-wrap gap-4">
                     {
                         jobList.filter(job => job.name?.toLowerCase().includes(search)).map((job) => (
-                            <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 max-h-96 border border-neutral-300 aspect-square">
-                                <h1 className="text-3xl font-bold">{job.name}</h1>
+                            <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 border border-neutral-300 aspect-square">
+                                <h1 className="text-3xl font-bold text-blue-600">{job.name}</h1>
                                 <p className="text-neutral-600">{job.company}</p>
                                 <p className="overflow-auto text-justify">
                                     {job.description}
                                 </p>
-                                <p className="flex flex-row gap-2 items-center mt-auto">
-                                    <MapPin size={16}/>
+                                <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 mt-auto h-10 items-center">
+                                    {
+                                        job.skills?.split(",").map((skill, index) => (
+                                            <p key={skill} className="text-nowrap px-5 py-1 bg-neutral-100 rounded-full h-fit">{skill}</p>
+                                        ))
+                                    }
+                                </div>
+                                <p className="flex flex-row gap-2 items-center">
+                                    <Coins size={16} />
+                                    {job.pay}
+                                </p>
+                                <p className="flex flex-row gap-2 items-center">
+                                    <MapPin size={16} />
                                     {job.location ?? "Not given"}
                                 </p>
                                 <div className="flex flex-row gap-2">
