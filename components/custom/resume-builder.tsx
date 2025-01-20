@@ -248,6 +248,34 @@ export function ResumeBuilder({
         await onApply(JSON.stringify(formData), Number(jobId), userId!, Math.floor(score));
     }
 
+    const deleteWorkExperience = (index: number): void => {
+        setFormData(prev => ({
+            ...prev,
+            workExperience: prev.workExperience.filter((_, i) => i !== index)
+        }));
+    };
+
+    const deleteProject = (index: number): void => {
+        setFormData(prev => ({
+            ...prev,
+            projects: prev.projects.filter((_, i) => i !== index)
+        }));
+    };
+
+    const deleteAchievement = (index: number): void => {
+        setFormData(prev => ({
+            ...prev,
+            achievements: prev.achievements.filter((_, i) => i !== index)
+        }));
+    };
+
+    const deleteEducation = (index: number): void => {
+        setFormData(prev => ({
+            ...prev,
+            education: prev.education.filter((_, i) => i !== index)
+        }));
+    };
+
     return (
         <div className="flex flex-row p-6 h-full w-full gap-3 overflow-hidden">
             <div className="flex flex-col gap-4 w-1/2 h-full overflow-auto">
@@ -395,6 +423,9 @@ export function ResumeBuilder({
                                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                         handleWorkChange(index, 'details', e.target.value.split('\n'))}
                                 />
+                                <Button onClick={() => deleteWorkExperience(index)} variant="outline" size="sm">
+                                    <Trash2 className="w-4 h-4 mr-2" /> Delete Experience
+                                </Button>
                             </div>
                         </div>
                     ))}
@@ -424,6 +455,9 @@ export function ResumeBuilder({
                                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                         handleProjectChange(index, 'details', e.target.value.split('\n'))}
                                 />
+                                <Button onClick={() => deleteProject(index)} variant="outline" size="sm">
+                                    <Trash2 className="w-4 h-4 mr-2" /> Delete Project
+                                </Button>
                             </div>
                         </div>
                     ))}
@@ -463,6 +497,9 @@ export function ResumeBuilder({
                                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                         handleAchievementChange(index, 'details', e.target.value.split('\n'))}
                                 />
+                                <Button onClick={() => deleteAchievement(index)} variant="outline" size="sm">
+                                    <Trash2 className="w-4 h-4 mr-2" /> Delete Achievement
+                                </Button>
                             </div>
                         </div>
                     ))}
@@ -506,6 +543,9 @@ export function ResumeBuilder({
                                             handleEducationChange(index, 'duration', e.target.value)}
                                     />
                                 </div>
+                                <Button onClick={() => deleteEducation(index)} variant="outline" size="sm">
+                                    <Trash2 className="w-4 h-4 mr-2" /> Delete Education
+                                </Button>
                             </div>
                         </div>
                     ))}
