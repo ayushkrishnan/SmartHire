@@ -14,7 +14,7 @@ export default async function HRDashboard() {
     const jobs = await getJobs();
 
     if (session) {
-        if (!["admin", "hr"].includes(session.user.role!)) redirect("/");
+        // if (!["admin", "hr"].includes(session.user.role!)) redirect("/");
     } else {
         redirect("/");
     }

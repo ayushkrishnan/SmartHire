@@ -1,3 +1,4 @@
+import { create } from "domain"
 import {
   boolean,
   timestamp,
@@ -7,6 +8,7 @@ import {
   integer,
   serial,
   json,
+  date,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
 
@@ -101,7 +103,10 @@ export const jobs = pgTable("jobs", {
   skills: text(),
   pay: text(),
   company: text(),
-  location: text()
+  location: text(),
+  workMode: text().default("In office"),
+  createdOn: date().defaultNow(),
+  deadline: date().defaultNow(),
 })
 
 export const resumes = pgTable("resumes", {

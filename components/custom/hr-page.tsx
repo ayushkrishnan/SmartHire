@@ -28,9 +28,10 @@ import { Button } from "../ui/button";
 import { FormEvent } from "react";
 import Link from "next/link";
 
-import { Coins, MapPin } from "lucide-react";
+import { Coins, MapPin, Timer, BriefcaseBusiness } from "lucide-react";
 
 import { Trash } from "lucide-react";
+import {Select, SelectTrigger, SelectValue, SelectContent, SelectItem} from "../ui/select";
 
 export function HRPage({
     name,
@@ -47,7 +48,10 @@ export function HRPage({
         skills: string | null,
         pay: string | null,
         company: string | null,
-        location: string | null
+        location: string | null,
+        workMode: string | null,
+        createdOn: string | null,
+        deadline: string | null
     }[],
     onNewJob: (formData: FormData) => Promise<{
         id: number,
@@ -56,7 +60,10 @@ export function HRPage({
         skills: string | null,
         pay: string | null,
         company: string | null,
-        location: string | null
+        location: string | null,
+        workMode: string | null,
+        createdOn: string | null,
+        deadline: string | null
     }[]>,
     onEditJob: (formData: FormData, jobId: number) => Promise<{
         id: number,
@@ -65,7 +72,10 @@ export function HRPage({
         skills: string | null,
         pay: string | null,
         company: string | null,
-        location: string | null
+        location: string | null,
+        workMode: string | null,
+        createdOn: string | null,
+        deadline: string | null
     }[]>,
     onDeleteJob: (jobId: number) => Promise<void>
 }) {
@@ -141,6 +151,21 @@ export function HRPage({
                                 <Label>Location</Label>
                                 <Input id="location" name="location" placeholder="Enter job location" required />
 
+                                <Label>Deadline</Label>
+                                <Input id="deadline" name="deadline" type="date" required />
+
+                                <Label>Work Mode</Label>
+                                <Select name="workMode" required>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select work mode"/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="In office">In office</SelectItem>
+                                        <SelectItem value="Remote">Remote</SelectItem>
+                                        <SelectItem value="Hybrid">Hybrid</SelectItem>
+                                    </SelectContent>
+                                </Select>
+
                                 <Button type="submit" className="rounded-full w-fit mt-4">Submit</Button>
                             </form>
                         </DialogContent>
@@ -153,6 +178,7 @@ export function HRPage({
                     {
                         jobList.filter(job => job.name?.toLowerCase().includes(search)).map((job) => (
                             <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 border border-neutral-300 aspect-square">
+                                <p className="text-neutral-500">{(new Date(job.createdOn!)).toLocaleDateString("en-IN")}</p>
                                 <h1 className="text-3xl font-bold text-blue-600">{job.name}</h1>
                                 <p className="text-neutral-600">{job.company}</p>
                                 <p className="overflow-auto text-justify">
@@ -172,6 +198,14 @@ export function HRPage({
                                 <p className="flex flex-row gap-2 items-center">
                                     <MapPin size={16} />
                                     {job.location ?? "Not given"}
+                                </p>
+                                <p className="flex flex-row gap-2 items-center">
+                                    <Timer size={16} />
+                                    {(new Date(job.deadline!)).toLocaleDateString("en-IN")}
+                                </p>
+                                <p className="flex flex-row gap-2 items-center">
+                                    <BriefcaseBusiness size={16} />
+                                    {job.workMode}
                                 </p>
                                 <div className="flex flex-row gap-2">
                                     <AlertDialog>
@@ -196,6 +230,20 @@ export function HRPage({
                                                 <Input id="company" name="company" placeholder="Enter company name" defaultValue={job.company!} required />
                                                 <Label>Location</Label>
                                                 <Input id="location" name="location" placeholder="Enter job location" defaultValue={job.location!} required />
+                                                <Label>Deadline</Label>
+                                                <Input id="deadline" name="deadline" type="date" defaultValue={job.deadline!} required />
+
+                                                <Label>Work Mode</Label>
+                                                <Select name="workMode" required defaultValue={job.workMode!}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select work mode"/>
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="In office">In office</SelectItem>
+                                                        <SelectItem value="Remote">Remote</SelectItem>
+                                                        <SelectItem value="Hybrid">Hybrid</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
                                                     <AlertDialogAction asChild>

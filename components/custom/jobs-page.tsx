@@ -6,7 +6,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
 
-import { Coins, MapPin } from "lucide-react";
+import { BriefcaseBusiness, Coins, MapPin, Timer } from "lucide-react";
 
 export function JobPage({
     userId,
@@ -23,7 +23,10 @@ export function JobPage({
         skills: string | null,
         pay: string | null,
         company: string | null,
-        location: string | null
+        location: string | null,
+        workMode: string | null,
+        createdOn: string | null,
+        deadline: string | null
     }[],
     applications: {
         data: unknown;
@@ -66,6 +69,14 @@ export function JobPage({
                             <p className="flex flex-row gap-2 items-center">
                                 <MapPin size={16} />
                                 {job.location ?? "Not given"}
+                            </p>
+                            <p className="flex flex-row gap-2 items-center">
+                                <Timer size={16} />
+                                {(new Date(job.deadline!)).toLocaleDateString("en-IN")}
+                            </p>
+                            <p className="flex flex-row gap-2 items-center">
+                                <BriefcaseBusiness size={16} />
+                                {job.workMode}
                             </p>
                             <div className="flex flex-row gap-2">
                                 {/* <AlertDialog>

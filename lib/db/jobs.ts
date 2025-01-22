@@ -3,7 +3,7 @@ import db from "./index"
 import { jobs, resumes, users } from "./schema"
 
 export async function getJobs(){
-    return await db.select().from(jobs);
+    return await db.select().from(jobs).orderBy(desc(jobs.createdOn));
 }
 
 export async function getJob(jobId: number){
