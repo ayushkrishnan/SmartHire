@@ -72,7 +72,9 @@ export function JobPage({
                             </p>
                             <p className="flex flex-row gap-2 items-center">
                                 <Timer size={16} />
-                                {(new Date(job.deadline!)).toLocaleDateString("en-IN")}
+                                {
+                                    Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) == 0 ? "Closes today" : `${Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days remaining`
+                                }
                             </p>
                             <p className="flex flex-row gap-2 items-center">
                                 <BriefcaseBusiness size={16} />

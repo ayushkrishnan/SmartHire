@@ -17,7 +17,7 @@ export default async function Jobs(){
         redirect("/");
     }
     
-    const jobs = await getJobs();
+    const jobs = (await getJobs()).filter(job => Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) >= 0);
     const jobApplications = await getJobApplications();
     
     return (
@@ -32,8 +32,8 @@ export default async function Jobs(){
                 </div>
             </nav>
             <BlurFade>
-                {/* <JobPage name={session?.user.name} jobs={jobs} applications={jobApplications} userId={session.user.id}/> */}
-                <p className="p-6 w-full text-center text-3xl font-bold">Under construction</p>
+                <JobPage name={session?.user.name} jobs={jobs} applications={jobApplications} userId={session.user.id}/>
+                {/* <p className="p-6 w-full text-center text-3xl font-bold">Under construction</p> */}
             </BlurFade>
         </div>
     )
