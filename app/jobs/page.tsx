@@ -17,7 +17,7 @@ export default async function Jobs(){
         redirect("/");
     }
     
-    const jobs = (await getJobs()).filter(job => Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) >= 0);
+    const jobs = (await getJobs()).filter(job => Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) >= 0).sort((a, b) => (new Date(a.deadline!).getTime()) - (new Date(b.deadline!).getTime()));
     const jobApplications = await getJobApplications();
     
     return (
