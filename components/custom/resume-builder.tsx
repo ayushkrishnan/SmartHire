@@ -282,7 +282,7 @@ export function ResumeBuilder({
                 {/* Basic Information */}
                 <div className="flex flex-col gap-2 rounded-md border border-neutral-300 p-10">
                     <div className="flex flex-row gap-2">
-                        <ShinyButton className="rounded-full" onClick={() => improveResume()}>Improve Resume</ShinyButton>
+                        <ShinyButton className="rounded-full text-nowrap" onClick={() => improveResume()}>Improve Resume</ShinyButton>
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button className="rounded-full">Upload resume</Button>

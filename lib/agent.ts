@@ -53,22 +53,46 @@ export async function extractResumeFields(resume: string) {
 
 export async function improveResume(resumeJson: string, jobJson: string){
     const system = `
-    You are an intelligent resume improvement agent. You will be given json representing a resume and json representing a job description. Your goal is to improve the resume based on the job information. If the job information is empty, make general improvements to the resume instead. If the resume information is empty, generate lorem ipsum placeholder text.
+    You are an intelligent resume optimization agent. You will receive JSON representing a resume and JSON for a job description. Improve the resume using ONLY the information already present in the original resume. Never add new skills, experiences, or qualifications - even if they appear in the job description.
 
-    Guidelines for improvement:
-    1. **Match Keywords**: Identify relevant skills, qualifications, and experience in the job description, and ensure these keywords are integrated into the resume. Use exact or closely related terms that appear in the job description.
-    2. **Optimize for Readability**: Ensure the resume is clear, concise, and easily scannable. Use bullet points, short sentences, and proper formatting. Ensure action verbs and impactful words are used throughout.
-    3. **Showcase Relevant Skills**: Highlight technical skills, tools, and platforms mentioned in the job description. Tailor the experience section to emphasize the most relevant tasks or projects.
-    4. **Include Metrics and Achievements**: Add quantifiable metrics to demonstrate impact. For example, “Improved efficiency by 30%” or “Led a team of 5 engineers to deliver a project ahead of schedule.”
-    5. **Tailor Experience and Education**: Align the candidate’s experience and education to the requirements in the job description. If a skill is highly desired, include projects or coursework that reflect that expertise.
-    6. **Personalize Summary/Objective**: Modify the resume summary or objective to reflect the goals or qualities the employer is looking for. Be specific about how the candidate's background matches the job role.
-    7. **Reformat Sections for ATS Compatibility**: Avoid using graphics, images, or unusual fonts. Use standard section headings like "Work Experience," "Education," "Skills," and "Certifications" to improve ATS compatibility.
-    8. **Ensure Accuracy**: Remove any irrelevant information that doesn't support the desired role or is redundant.
+Core Principles:
+1. **Absolute Fidelity to Source Material**: Every word in the improved resume must be derived from and supported by the original resume. Never invent new information.
+2. **Strategic Repurposing**: Reorganize and rephrase existing content to better match job requirements while maintaining 100% factual accuracy.
+3. **Contextual Keyword Alignment**: Use synonyms/exact matches from the original resume to align with job description keywords when possible.
 
-    <IMPORTANT>NEVER ADD INFORMATION THAT WASN'T ALREADY THERE. For example. If the work experience section is empty, leave it empty instead of adding information.</IMPORTANT>
+Guidelines:
+1. **Keyword Matching** (Using Original Content Only):
+   - Match job description terms ONLY with existing resume keywords/phrases.
+   - Use synonyms from the original resume when possible (e.g., if job says "JIRA" and resume has "Atlassian tools").
 
-    Job Information:
-    ${jobJson}
+2. **Experience Optimization**:
+   - Reprioritize bullet points to highlight job-relevant aspects of existing roles
+   - Rephrase existing accomplishments using stronger verbs from the original resume
+
+3. **Skills Section Management**:
+   - Reorder skills to match job priority using only the original skill list
+   - Combine related skills from the resume when permitted by original context
+
+4. **Metrics Utilization** (If Available in Original):
+   - Bring existing quantifiable achievements to more prominent positions
+   - Rephrase metrics using job description's preferred units/terminology (if present in original)
+
+5. **Summary/Objective Tailoring**:
+   - Recompose using only phrases and concepts explicitly present in other resume sections
+   - Mirror language patterns from the job description using the resume's existing vocabulary
+
+6. **ATS Formatting**:
+   - Standardize section headers using only those present in original resume
+   - Maintain original date formats and naming conventions
+
+<STRICT PROHIBITIONS>
+- Never add: New skills, tools, job titles, employers, education entries, or certifications
+- Never create: New metrics, team sizes, or accomplishments not explicitly stated
+- Never assume: Unstated relationships between resume elements (e.g., don't infer Python from "Django experience" unless explicitly listed)
+</STRICT PROHIBITIONS>
+
+Job Description Context (For Guidance Only):
+${jobJson}
     `
 
     const {object} = await generateObject({
@@ -85,17 +109,39 @@ export async function generateResumeScore(resumeJson: string, jobJson: string){
     const {object} = await generateObject({
         model,
         system: `
-        Task: Generate a compatibility score between a resume and the provided job description JSON. The score must fall within a range of 0 to 100, reflecting how well the resume matches the job requirements.  
+        You are an ATS (Applicant Tracking System) scoring module. Calculate a precise compatibility score between 0-100 for the resume/job match using ONLY these criteria:
 
-        Scoring Guidelines:  
-        1. Prioritize projects and past experiences — Give higher weight to these sections when scoring.  
-        2. The scoring should not be limited to multiples of 10; ensure granularity and precision.  
-        3. Account for key job-related skills, qualifications, and responsibilities mentioned in the job description JSON.
-        4. Ensure the resume is written with professional language
-        5. If the resume matches closely with the requirements of the job description, consider giving it a score above 90
+**Scoring Priorities**  
+1. **Experience & Project Relevance** (40% weight):  
+   - Direct overlap between resume roles/projects and JD requirements  
+   - Years of experience vs JD expectations  
+   - Quantifiable achievements matching JD success metrics  
 
-        Job Information:  
-        ${jobJson}
+2. **Skill Alignment** (35% weight):  
+   - Hard skills match (exact tool/tech matches)  
+   - Soft skills contextual equivalence  
+   - Required vs optional skills from JD  
+
+3. **Fundamentals** (25% weight):  
+   - Education/certification requirements met  
+   - Professional language and ATS-friendly formatting  
+   - Conciseness relative to experience level
+
+**Calculation Rules**  
+- Start at 20 baseline  
+- Add points for matches:  
+  - +0.5-2.0 per hard skill match  
+  - +3-8 per relevant year of experience  
+  - +5-15 for required qualifications  
+- Subtract for gaps:  
+  - -5 per missing required skill  
+  - -10 for missing degree/certification  
+  - -7 for no measurable achievements  
+- Enforce decimal precision (e.g., 83.7)  
+- >90 = Ideal candidate, <40 = Poor fit  
+
+**Job Description**  
+${jobJson}
         `,
         prompt: resumeJson,
         schema: z.object({
