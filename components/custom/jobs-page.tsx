@@ -72,6 +72,7 @@ export function JobPage({
                             </p>
                             <p className="flex flex-row gap-2 items-center">
                                 <Timer size={16} />
+                                <b>Deadline: </b>
                                 {
                                     Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) == 0 ? "Closes today" : `${Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days remaining`
                                 }
