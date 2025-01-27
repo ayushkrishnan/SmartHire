@@ -50,6 +50,7 @@ export function JobPage({
                 {
                     jobs.filter(job => job.name?.toLowerCase().includes(search)).map((job) => (
                         <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 border border-neutral-300 aspect-square">
+                            <p className="text-neutral-500">{(new Date(job.createdOn!)).toLocaleDateString("en-IN")}</p>
                             <h1 className="text-3xl font-bold text-blue-600">{job.name}</h1>
                             <p className="text-neutral-600">{job.company}</p>
                             <p className="overflow-auto text-justify">
