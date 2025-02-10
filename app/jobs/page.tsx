@@ -33,7 +33,6 @@ export default async function Jobs(){
             </nav>
             <BlurFade>
                 <JobPage name={session?.user.name} jobs={jobs} applications={jobApplications} userId={session.user.id}/>
-                {/* <p className="p-6 w-full text-center text-3xl font-bold">Under construction</p> */}
             </BlurFade>
         </div>
     )

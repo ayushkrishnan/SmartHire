@@ -3,12 +3,14 @@
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ResumePDF } from "./resume";
+import { Resumeformat1 } from "./resume1test";
 import { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { ShinyButton } from "../ui/shiny-button";
 import { useSearchParams } from "next/navigation";
 import NumberTicker from "../ui/number-ticker";
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../ui/select"; // Import Select components
 
 import dynamic from "next/dynamic";
 
@@ -114,6 +116,7 @@ export function ResumeBuilder({
 
     const [isClient, setIsClient] = useState(false);
     const [uploadedResume, setUploadedResume] = useState<File>()
+    const [selectedTemplate, setSelectedTemplate] = useState("default"); // Add state for selected template
 
     useState(() => {
         setIsClient(true);
@@ -551,12 +554,29 @@ export function ResumeBuilder({
                     ))}
                 </div>
             </div>
-            <div className="flex h-full w-1/2">
+            <div className="flex flex-col h-full w-1/2 gap">
+                <Select onValueChange={(value) => setSelectedTemplate(value)}>
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select Template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="default">Default Template</SelectItem>
+                        <SelectItem value="format1">format1 Template</SelectItem>
+                        {/* Add more templates here as needed */}
+                    </SelectContent>
+                </Select>
                 {
                     isClient &&
-                    <PDFViewer className="w-full rounded-md">
-                        <ResumePDF data={formData} />
-                    </PDFViewer>
+                    <PDFViewer className="w-full rounded-md h-full">
+    {selectedTemplate === "default" ? (
+        <ResumePDF data={formData} />
+    ) : selectedTemplate === "format1" ? (
+        <Resumeformat1 data={formData} />
+    ) : (
+        <ResumePDF data={formData} /> // Default fallback
+    )}
+</PDFViewer>
+
                 }
             </div>
         </div>
