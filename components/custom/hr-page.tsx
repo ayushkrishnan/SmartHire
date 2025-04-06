@@ -31,7 +31,9 @@ import Link from "next/link";
 import { Coins, MapPin, Timer, BriefcaseBusiness } from "lucide-react";
 
 import { Trash } from "lucide-react";
-import {Select, SelectTrigger, SelectValue, SelectContent, SelectItem} from "../ui/select";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../ui/select";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export function HRPage({
     name,
@@ -157,7 +159,7 @@ export function HRPage({
                                 <Label>Work Mode</Label>
                                 <Select name="workMode" required>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select work mode"/>
+                                        <SelectValue placeholder="Select work mode" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="In office">In office</SelectItem>
@@ -174,113 +176,230 @@ export function HRPage({
                         setSearch(event.target.value.toLowerCase());
                     }} />
                 </div>
-                <div className="flex flex-row flex-wrap gap-4">
-                    {
-                        jobList.filter(job => job.name?.toLowerCase().includes(search)).map((job) => (
-                            <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 border border-neutral-300 aspect-square">
-                                <p className="text-neutral-500">{(new Date(job.createdOn!)).toLocaleDateString("en-IN")}</p>
-                                <h1 className="text-3xl font-bold text-blue-600">{job.name}</h1>
-                                <p className="text-neutral-600">{job.company}</p>
-                                <p className="overflow-auto text-justify">
-                                    {job.description}
-                                </p>
-                                <div className="flex flex-row flex-wrap gap-2 mt-auto py-2 h-fit items-center">
-                                    {
-                                        job.skills?.split(",").map((skill, index) => (
-                                            <p key={skill} className="text-nowrap px-5 py-1 bg-neutral-100 rounded-full h-fit">{skill}</p>
-                                        ))
-                                    }
-                                </div>
-                                <p className="flex flex-row gap-2 items-center">
-                                    <Coins size={16} />
-                                    {job.pay}
-                                </p>
-                                <p className="flex flex-row gap-2 items-center">
-                                    <MapPin size={16} />
-                                    {job.location ?? "Not given"}
-                                </p>
-                                <p className="flex flex-row gap-2 items-center">
-                                    <Timer size={16} />
-                                    <b>Deadline: </b>
-                                    {
-                                        Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) >= 0 ? `Closes in ${Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days` : `Closed ${Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))/-1} days ago`
-                                    }
-                                </p>
-                                <p className="flex flex-row gap-2 items-center">
-                                    <BriefcaseBusiness size={16} />
-                                    {job.workMode}
-                                </p>
-                                <div className="flex flex-row gap-2">
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button className="rounded-full w-fit">Edit Job</Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Add a new job</AlertDialogTitle>
-                                                <AlertDialogDescription>Fill in the job details below</AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <form className="flex flex-col gap-2" onSubmit={(event) => handleEdit(event, job.id)}>
-                                                <Label>Job Title</Label>
-                                                <Input id="name" name="name" placeholder="Enter job title" defaultValue={job.name!} required />
-                                                <Label>Description</Label>
-                                                <Textarea id="description" name="description" placeholder="Enter job description" defaultValue={job.description!} required />
-                                                <Label>Required Skills</Label>
-                                                <Input id="skills" name="skills" placeholder="Enter required skills" defaultValue={job.skills!} required />
-                                                <Label>Pay Range</Label>
-                                                <Input id="pay" name="pay" placeholder="Enter pay range" defaultValue={job.pay!} required />
-                                                <Label>Company</Label>
-                                                <Input id="company" name="company" placeholder="Enter company name" defaultValue={job.company!} required />
-                                                <Label>Location</Label>
-                                                <Input id="location" name="location" placeholder="Enter job location" defaultValue={job.location!} required />
-                                                <Label>Deadline</Label>
-                                                <Input id="deadline" name="deadline" type="date" defaultValue={job.deadline!} required />
+                <Tabs defaultValue="current">
+                    <TabsList>
+                        <TabsTrigger value="current">Current Jobs</TabsTrigger>
+                        <TabsTrigger value="history">History</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="current">
+                        <div className="flex flex-row flex-wrap gap-4">
+                            {
+                                jobList.filter(job => job.name?.toLowerCase().includes(search) && Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) >= 0 ).map((job) => (
+                                    <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 border border-neutral-300 aspect-square">
+                                        <p className="text-neutral-500">{(new Date(job.createdOn!)).toLocaleDateString("en-IN")}</p>
+                                        <h1 className="text-3xl font-bold text-blue-600">{job.name}</h1>
+                                        <p className="text-neutral-600">{job.company}</p>
+                                        <p className="overflow-auto text-justify">
+                                            {job.description}
+                                        </p>
+                                        <div className="flex flex-row flex-wrap gap-2 mt-auto py-2 h-fit items-center">
+                                            {
+                                                job.skills?.split(",").map((skill, index) => (
+                                                    <p key={skill} className="text-nowrap px-5 py-1 bg-neutral-100 rounded-full h-fit">{skill}</p>
+                                                ))
+                                            }
+                                        </div>
+                                        <p className="flex flex-row gap-2 items-center">
+                                            <Coins size={16} />
+                                            {job.pay}
+                                        </p>
+                                        <p className="flex flex-row gap-2 items-center">
+                                            <MapPin size={16} />
+                                            {job.location ?? "Not given"}
+                                        </p>
+                                        <p className="flex flex-row gap-2 items-center">
+                                            <Timer size={16} />
+                                            <b>Deadline: </b>
+                                            {
+                                                Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) >= 0 ? `Closes in ${Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days` : `Closed ${Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) / -1} days ago`
+                                            }
+                                        </p>
+                                        <p className="flex flex-row gap-2 items-center">
+                                            <BriefcaseBusiness size={16} />
+                                            {job.workMode}
+                                        </p>
+                                        <div className="flex flex-row gap-2">
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button className="rounded-full w-fit">Edit Job</Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Add a new job</AlertDialogTitle>
+                                                        <AlertDialogDescription>Fill in the job details below</AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <form className="flex flex-col gap-2" onSubmit={(event) => handleEdit(event, job.id)}>
+                                                        <Label>Job Title</Label>
+                                                        <Input id="name" name="name" placeholder="Enter job title" defaultValue={job.name!} required />
+                                                        <Label>Description</Label>
+                                                        <Textarea id="description" name="description" placeholder="Enter job description" defaultValue={job.description!} required />
+                                                        <Label>Required Skills</Label>
+                                                        <Input id="skills" name="skills" placeholder="Enter required skills" defaultValue={job.skills!} required />
+                                                        <Label>Pay Range</Label>
+                                                        <Input id="pay" name="pay" placeholder="Enter pay range" defaultValue={job.pay!} required />
+                                                        <Label>Company</Label>
+                                                        <Input id="company" name="company" placeholder="Enter company name" defaultValue={job.company!} required />
+                                                        <Label>Location</Label>
+                                                        <Input id="location" name="location" placeholder="Enter job location" defaultValue={job.location!} required />
+                                                        <Label>Deadline</Label>
+                                                        <Input id="deadline" name="deadline" type="date" defaultValue={job.deadline!} required />
 
-                                                <Label>Work Mode</Label>
-                                                <Select name="workMode" required defaultValue={job.workMode!}>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select work mode"/>
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="In office">In office</SelectItem>
-                                                        <SelectItem value="Remote">Remote</SelectItem>
-                                                        <SelectItem value="Hybrid">Hybrid</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction asChild>
-                                                        <Button type="submit" className="rounded-full w-fit">Submit</Button>
-                                                    </AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </form>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                    <Link href={`/hr/${job.id}`}>
-                                        <Button className="rounded-full bg-blue-600 hover:bg-blue-500">View job</Button>
-                                    </Link>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button variant="ghost" className="ml-auto w-fit rounded-full">
-                                                <Trash />
-                                            </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Delete {job.name}</AlertDialogTitle>
-                                                <AlertDialogDescription>This action is irreversible</AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
-                                                <AlertDialogAction className="rounded-full bg-red-600 hover:bg-red-500" onClick={() => handleDelete(job.id)}>Delete Job</AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>
+                                                        <Label>Work Mode</Label>
+                                                        <Select name="workMode" required defaultValue={job.workMode!}>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Select work mode" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                <SelectItem value="In office">In office</SelectItem>
+                                                                <SelectItem value="Remote">Remote</SelectItem>
+                                                                <SelectItem value="Hybrid">Hybrid</SelectItem>
+                                                            </SelectContent>
+                                                        </Select>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                                            <AlertDialogAction asChild>
+                                                                <Button type="submit" className="rounded-full w-fit">Submit</Button>
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </form>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                            <Link href={`/hr/${job.id}`}>
+                                                <Button className="rounded-full bg-blue-600 hover:bg-blue-500">View job</Button>
+                                            </Link>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" className="ml-auto w-fit rounded-full">
+                                                        <Trash />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Delete {job.name}</AlertDialogTitle>
+                                                        <AlertDialogDescription>This action is irreversible</AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction className="rounded-full bg-red-600 hover:bg-red-500" onClick={() => handleDelete(job.id)}>Delete Job</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="history">
+                        <div className="flex flex-row flex-wrap gap-4">
+                            {
+                                jobList.filter(job => job.name?.toLowerCase().includes(search) && Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) < 0 ).map((job) => (
+                                    <div key={job.id} className="flex flex-col p-4 gap-2 rounded-lg w-96 border border-neutral-300 aspect-square">
+                                        <p className="text-neutral-500">{(new Date(job.createdOn!)).toLocaleDateString("en-IN")}</p>
+                                        <h1 className="text-3xl font-bold text-blue-600">{job.name}</h1>
+                                        <p className="text-neutral-600">{job.company}</p>
+                                        <p className="overflow-auto text-justify">
+                                            {job.description}
+                                        </p>
+                                        <div className="flex flex-row flex-wrap gap-2 mt-auto py-2 h-fit items-center">
+                                            {
+                                                job.skills?.split(",").map((skill, index) => (
+                                                    <p key={skill} className="text-nowrap px-5 py-1 bg-neutral-100 rounded-full h-fit">{skill}</p>
+                                                ))
+                                            }
+                                        </div>
+                                        <p className="flex flex-row gap-2 items-center">
+                                            <Coins size={16} />
+                                            {job.pay}
+                                        </p>
+                                        <p className="flex flex-row gap-2 items-center">
+                                            <MapPin size={16} />
+                                            {job.location ?? "Not given"}
+                                        </p>
+                                        <p className="flex flex-row gap-2 items-center">
+                                            <Timer size={16} />
+                                            <b>Deadline: </b>
+                                            {
+                                                Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) >= 0 ? `Closes in ${Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days` : `Closed ${Math.ceil((new Date(job.deadline!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) / -1} days ago`
+                                            }
+                                        </p>
+                                        <p className="flex flex-row gap-2 items-center">
+                                            <BriefcaseBusiness size={16} />
+                                            {job.workMode}
+                                        </p>
+                                        <div className="flex flex-row gap-2">
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button className="rounded-full w-fit">Edit Job</Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Add a new job</AlertDialogTitle>
+                                                        <AlertDialogDescription>Fill in the job details below</AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <form className="flex flex-col gap-2" onSubmit={(event) => handleEdit(event, job.id)}>
+                                                        <Label>Job Title</Label>
+                                                        <Input id="name" name="name" placeholder="Enter job title" defaultValue={job.name!} required />
+                                                        <Label>Description</Label>
+                                                        <Textarea id="description" name="description" placeholder="Enter job description" defaultValue={job.description!} required />
+                                                        <Label>Required Skills</Label>
+                                                        <Input id="skills" name="skills" placeholder="Enter required skills" defaultValue={job.skills!} required />
+                                                        <Label>Pay Range</Label>
+                                                        <Input id="pay" name="pay" placeholder="Enter pay range" defaultValue={job.pay!} required />
+                                                        <Label>Company</Label>
+                                                        <Input id="company" name="company" placeholder="Enter company name" defaultValue={job.company!} required />
+                                                        <Label>Location</Label>
+                                                        <Input id="location" name="location" placeholder="Enter job location" defaultValue={job.location!} required />
+                                                        <Label>Deadline</Label>
+                                                        <Input id="deadline" name="deadline" type="date" defaultValue={job.deadline!} required />
+
+                                                        <Label>Work Mode</Label>
+                                                        <Select name="workMode" required defaultValue={job.workMode!}>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Select work mode" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                <SelectItem value="In office">In office</SelectItem>
+                                                                <SelectItem value="Remote">Remote</SelectItem>
+                                                                <SelectItem value="Hybrid">Hybrid</SelectItem>
+                                                            </SelectContent>
+                                                        </Select>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                                            <AlertDialogAction asChild>
+                                                                <Button type="submit" className="rounded-full w-fit">Submit</Button>
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </form>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                            <Link href={`/hr/${job.id}`}>
+                                                <Button className="rounded-full bg-blue-600 hover:bg-blue-500">View job</Button>
+                                            </Link>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" className="ml-auto w-fit rounded-full">
+                                                        <Trash />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Delete {job.name}</AlertDialogTitle>
+                                                        <AlertDialogDescription>This action is irreversible</AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction className="rounded-full bg-red-600 hover:bg-red-500" onClick={() => handleDelete(job.id)}>Delete Job</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </TabsContent>
+                </Tabs>
             </div>
         </div>
     )
