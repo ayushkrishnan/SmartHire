@@ -97,7 +97,8 @@ ${jobJson}
 
     const {object} = await generateObject({
         model,
-        system,
+        system, 
+         
         schema: resumeSchema,
         prompt: resumeJson
     })

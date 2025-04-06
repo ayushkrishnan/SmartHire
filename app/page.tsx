@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/auth";
+import { redirect } from 'next/navigation';
 
 import BlurFade from "@/components/ui/blur-fade";
 
@@ -15,12 +16,15 @@ export default async function Home() {
     switch(session.user.role){
       case "user":
         dashboard = "/jobs"
+        redirect("/jobs")
         break;
       case "hr":
         dashboard = "/hr"
+        redirect("/hr")
         break;
       case "admin":
         dashboard = "/admin"
+        redirect("/admin")
         break;
     }
   }

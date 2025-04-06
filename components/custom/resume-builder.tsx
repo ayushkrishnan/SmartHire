@@ -3,7 +3,7 @@
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ResumePDF } from "./resume";
-import { Resumeformat1 } from "./resume1test";
+import { ResumeFormat1 } from "./resume1test";
 import { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
@@ -571,7 +571,7 @@ export function ResumeBuilder({
     {selectedTemplate === "default" ? (
         <ResumePDF data={formData} />
     ) : selectedTemplate === "format1" ? (
-        <Resumeformat1 data={formData} />
+        <ResumeFormat1 data={formData} />
     ) : (
         <ResumePDF data={formData} /> // Default fallback
     )}

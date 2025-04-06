@@ -36,36 +36,40 @@ export interface ResumeData {
     projects: Project[];
     skills: string[];
     achievements: Achievement[],
-    education: Education[],
-    languages: string[]
+    education: Education[];
+    languages: string[];
 }
 
 const styles = StyleSheet.create({
     page: {
         padding: 30,
         fontSize: 11,
-        fontFamily: 'Helvetica', // Changed font family
+        fontFamily: 'Helvetica',
     },
     header: {
         marginBottom: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     name: {
-        fontSize: 24,
-        marginBottom: 5,
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    contact: {
+        fontSize: 11,
+        flexDirection: 'column',
+        gap: 5,
+        fontWeight: 'normal',
     },
     title: {
         fontSize: 14,
         fontWeight: 'normal',
-        marginBottom: 15,
-    },
-    contact: {
-        flexDirection: 'row',
-        gap: 15,
         marginBottom: 10,
-        fontSize: 10,
+        color: '#555',
     },
     sectionTitle: {
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: 'bold',
         marginBottom: 8,
         marginTop: 12,
@@ -73,32 +77,17 @@ const styles = StyleSheet.create({
         borderBottomColor: '#000000',
         paddingBottom: 3,
     },
-    position: {
-        fontStyle: 'normal', // Removed italic
-        fontWeight: 'normal'
+    section: {
+        marginBottom: 20,
     },
     workHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 2,
-        fontWeight: "bold",
-        fontSize: 10,
-    },
-    bullet: {
-        marginLeft: 15,
-        marginBottom: 2,
-        fontSize: 10,
-    },
-    skillsGrid: {
-        flexDirection: 'row',
-        flexWrap: "wrap",
-        gap: 10,
-    },
-    section: {
-        marginBottom: 15
+        fontSize: 11,
+        fontWeight: 'bold',
+        marginBottom: 4,
     },
     companyName: {
-        fontSize: 10,
         fontWeight: 'bold',
     },
     companyDetails: {
@@ -107,32 +96,50 @@ const styles = StyleSheet.create({
         fontSize: 10,
         marginBottom: 5,
     },
+    skillsGrid: {
+        flexDirection: 'row',
+        flexWrap: "wrap",
+        gap: 12,
+        fontSize: 10,
+    },
+    bullet: {
+        marginLeft: 15,
+        marginBottom: 5,
+        fontSize: 11,
+    },
 });
 
-export const Resumeformat1: React.FC<{ data: ResumeData }> = ({ data }) => (
+export const ResumeFormat1: React.FC<{ data: ResumeData }> = ({ data }) => (
     <Document>
         <Page size="A4" style={styles.page}>
+            {/* Header Section */}
             <View style={styles.header}>
-                <Text style={styles.name}>{data.name}</Text>
-                <Text style={styles.title}>Mechanical Engineer</Text>
+                <View>
+                    <Text style={styles.name}>{data.name}</Text>
+                    <br />
+                    <Text style={styles.title}>{data.introduction}</Text>
+                </View>
                 <View style={styles.contact}>
-                    <Text>Phone: {data.phone}</Text>
-                    <Text>Email: {data.email}</Text>
-                    <Text>Address: {data.location}</Text>
+                    <Text>{data.phone}</Text>
+                    <Text>{data.email}</Text>
+                    <Text>{data.location}</Text>
                 </View>
             </View>
 
+            {/* Work Experience Section */}
             <View style={styles.section}>
                 {data.workExperience.length > 0 &&
                     <Text style={styles.sectionTitle}>PROFESSIONAL EXPERIENCE</Text>
                 }
                 {data.workExperience.map((work, index) => (
-                    <View key={index} style={{ marginBottom: 10 }}>
+                    <View key={index} style={{ marginBottom: 15 }}>
                         <View style={styles.workHeader}>
-                            <Text style={styles.companyName}>{work.position} | {work.duration}</Text>
+                            <Text style={styles.companyName}>{work.company}</Text>
+                            <Text>{work.duration}</Text>
                         </View>
                         <View style={styles.workHeader}>
-                            <Text>{work.company}</Text>
+                            <Text>{work.position}</Text>
+                            <Text>{work.location}</Text>
                         </View>
                         {work.details.map((detail, i) => (
                             <View key={i} style={styles.bullet}>
@@ -143,32 +150,82 @@ export const Resumeformat1: React.FC<{ data: ResumeData }> = ({ data }) => (
                 ))}
             </View>
 
+            {/* Education Section */}
             <View style={styles.section}>
-                {
-                    data.education.length > 0 &&
+                {data.education.length > 0 &&
                     <Text style={styles.sectionTitle}>EDUCATION</Text>
                 }
                 {data.education.map((edu, index) => (
-                    <View key={index} style={{ marginBottom: 10 }}>
+                    <View key={index} style={{ marginBottom: 15 }}>
                         <View style={styles.workHeader}>
-                            <Text>{edu.school} | {edu.duration}</Text>
+                            <Text>{edu.school}</Text>
+                            <Text>{edu.duration}</Text>
                         </View>
                         <View style={styles.workHeader}>
                             <Text>{edu.degree}</Text>
+                            <Text>{edu.location}</Text>
                         </View>
                     </View>
                 ))}
             </View>
 
+            {/* Skills Section */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>CERTIFICATES</Text>
+                {data.skills.length > 0 &&
+                    <Text style={styles.sectionTitle}>SKILLS</Text>
+                }
                 <View style={styles.skillsGrid}>
-                    {data.achievements.map((achievement, index) => (
-                        <Text key={index}>{achievement.title}</Text>
+                    {data.skills.map((skill, index) => (
+                        <Text key={index}>{skill}</Text>
                     ))}
                 </View>
             </View>
 
+            {/* Achievements Section */}
+            <View style={styles.section}>
+                {data.achievements.length > 0 &&
+                    <Text style={styles.sectionTitle}>ACHIEVEMENTS</Text>
+                }
+                {data.achievements.map((achievement, index) => (
+                    <View key={index} style={{ marginBottom: 15 }}>
+                        <Text style={{ fontWeight: 'bold' }}>{achievement.title}</Text>
+                        {achievement.details.map((detail, i) => (
+                            <View key={i} style={styles.bullet}>
+                                <Text>• {detail}</Text>
+                            </View>
+                        ))}
+                    </View>
+                ))}
+            </View>
+
+            {/* Projects Section */}
+            <View style={styles.section}>
+                {data.projects.length > 0 &&
+                    <Text style={styles.sectionTitle}>PROJECTS</Text>
+                }
+                {data.projects.map((project, index) => (
+                    <View key={index} style={{ marginBottom: 15 }}>
+                        <Text style={{ fontWeight: 'bold' }}>{project.name}</Text>
+                        {project.details.map((detail, i) => (
+                            <View key={i} style={styles.bullet}>
+                                <Text>• {detail}</Text>
+                            </View>
+                        ))}
+                    </View>
+                ))}
+            </View>
+
+            {/* Languages Section */}
+            <View style={styles.section}>
+                {data.languages.length > 0 &&
+                    <Text style={styles.sectionTitle}>LANGUAGES</Text>
+                }
+                <View style={styles.skillsGrid}>
+                    {data.languages.map((lang, index) => (
+                        <Text key={index}>{lang}</Text>
+                    ))}
+                </View>
+            </View>
         </Page>
     </Document>
 );
